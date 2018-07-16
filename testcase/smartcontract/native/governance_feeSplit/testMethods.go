@@ -1504,7 +1504,6 @@ func EmergencyBlock(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("json.Unmarshal failed %v", err)
 		return false
 	}
-
 	var users []*account.Account
 	var pubKeys []keypair.PublicKey
 	time.Sleep(1 * time.Second)
