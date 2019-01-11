@@ -45,3 +45,32 @@ func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, par
 
 	return nil
 }
+
+func ShardQuery(ctx *testframework.TestFrameworkContext, shardID uint64) (*shardmgmt.ShardState, error) {
+	globalStateValue, err := ctx.Ont.GetStorage(utils.ShardMgmtContractAddress.ToHexString(), []byte(shardmgmt.KEY_GLOBAL_STATE))
+	if err != nil {
+		return nil, fmt.Errorf("shardQeury, get global storage: %s", err)
+	}
+	gs := &shardmgmt.ShardMgmtGlobalState{}
+	if err := gs.Deserialize(bytes.NewBuffer(globalStateValue)); err != nil {
+		return nil, fmt.Errorf("failed to parse global state: %s", err)
+	}
+	fmt.Printf("global state: %v \n", gs)
+
+	shardIDBytes, err := shardmgmt.GetUint64Bytes(shardID)
+	if err != nil {
+		return nil, fmt.Errorf("get shard ID bytes: %s", err)
+	}
+	key := ConcatKey([]byte(shardmgmt.KEY_SHARD_STATE), shardIDBytes)
+	value, err := ctx.Ont.GetStorage(utils.ShardMgmtContractAddress.ToHexString(), key)
+	if err != nil {
+		return nil, fmt.Errorf("shardQuery, get storage: %s", err)
+	}
+
+	s := &shardmgmt.ShardState{}
+	if err := s.Deserialize(bytes.NewBuffer(value)); err != nil {
+		return nil, fmt.Errorf("shardQuery, deserialize shard state: %s", err)
+	}
+
+	return s, nil
+}

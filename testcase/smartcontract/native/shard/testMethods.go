@@ -5,6 +5,8 @@ import (
 	"github.com/ontio/ontology-tool/testframework"
 	"io/ioutil"
 	"encoding/json"
+	"fmt"
+	"bytes"
 )
 
 type ShardInitParam struct {
@@ -71,5 +73,35 @@ func TestShardCreate(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	waitForBlock(ctx)
+	return true
+}
+
+type ShardQueryParam struct {
+	ShardID uint64 `json:"shard_id"`
+}
+
+func TestShardQuery(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/ShardQuery.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ShardQueryParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal shard create param: %s", err)
+		return false
+	}
+
+	s, err := ShardQuery(ctx, param.ShardID)
+	if err != nil {
+		ctx.LogError("shard query: %s", err)
+		return false
+	}
+
+	buf := new(bytes.Buffer)
+	s.Serialize(buf)
+	fmt.Printf("shard: %s", string(buf.Bytes()))
 	return true
 }
