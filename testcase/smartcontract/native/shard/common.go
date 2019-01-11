@@ -1,0 +1,45 @@
+package shard
+
+import (
+	"github.com/ontio/ontology-tool/testframework"
+	"time"
+	"github.com/ontio/ontology/common/password"
+	sdk "github.com/ontio/ontology-go-sdk"
+)
+
+func getAccountByPassword(ctx *testframework.TestFrameworkContext, path string) (*sdk.Account, bool) {
+	wallet, err := ctx.Ont.OpenWallet(path)
+	if err != nil {
+		ctx.LogError("open wallet error:%s", err)
+		return nil, false
+	}
+	pwd, err := password.GetPassword()
+	if err != nil {
+		ctx.LogError("getPassword error:%s", err)
+		return nil, false
+	}
+	user, err := wallet.GetDefaultAccount(pwd)
+	if err != nil {
+		ctx.LogError("getDefaultAccount error:%s", err)
+		return nil, false
+	}
+	return user, true
+}
+
+func waitForBlock(ctx *testframework.TestFrameworkContext) bool {
+	_, err := ctx.Ont.WaitForGenerateBlock(30*time.Second, 1)
+	if err != nil {
+		ctx.LogError("WaitForGenerateBlock error:%s", err)
+		return false
+	}
+	return true
+}
+
+func ConcatKey(args ...[]byte) []byte {
+	temp := []byte{}
+	for _, arg := range args {
+		temp = append(temp, arg...)
+	}
+	return temp
+}
+
