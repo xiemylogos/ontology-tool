@@ -9,4 +9,5 @@ func TestShardMgmtContract() {
 	testframework.TFramework.RegTestCase("ShardPeerJoin", TestShardPeerJoin)
 	testframework.TFramework.RegTestCase("ShardActivate", TestShardActivate)
 	testframework.TFramework.RegTestCase("ShardQuery", TestShardQuery)
+	testframework.TFramework.RegTestCase("ShardDepositGas", TestShardDespoitGas)
 }

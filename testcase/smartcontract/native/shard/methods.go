@@ -10,6 +10,7 @@ import (
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt/states"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt/utils"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
+	"github.com/ontio/ontology/smartcontract/service/native/shardgas"
 )
 
 func ShardInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error {
@@ -143,4 +144,26 @@ func ShardQuery(ctx *testframework.TestFrameworkContext, shardID uint64) (*shard
 	}
 
 	return s, nil
+}
+
+func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, amount uint64) error {
+	param := shardgas.DepositGasParam{
+		UserAddress: user.Address,
+		ShardID: shardID,
+		Amount: amount,
+	}
+	buf := new(bytes.Buffer)
+	if err := param.Serialize(buf); err != nil {
+		return fmt.Errorf("failed to ser shard deposit gas param: %s", err)
+	}
+
+	method := shardgas.DEPOSIT_GAS_NAME
+	contractAddress := utils.ShardGasMgmtContractAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{buf.Bytes()})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("shard deposit gas txHash is :", txHash.ToHexString())
+	return nil
 }
