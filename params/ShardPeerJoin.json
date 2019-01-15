@@ -1,0 +1,6 @@
+{
+   "Path": "../ontology/wallet.dat",
+   "shard_id": 1,
+   "peer_pub_key": "test-pubkey",
+   "stake_amount": 1000000
+}

@@ -1,12 +1,15 @@
 package shard
 
 import (
-	"github.com/ontio/ontology-tool/testframework"
-	sdk "github.com/ontio/ontology-go-sdk"
-	"fmt"
-	"github.com/ontio/ontology/smartcontract/service/native/utils"
-	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt"
 	"bytes"
+	"fmt"
+
+	sdk "github.com/ontio/ontology-go-sdk"
+	"github.com/ontio/ontology-tool/testframework"
+	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt"
+	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt/states"
+	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt/utils"
+	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
 
 func ShardInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error {
@@ -18,20 +21,18 @@ func ShardInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
 	ctx.LogInfo("shard init txHash is :", txHash.ToHexString())
-	waitForBlock(ctx)
-
 	return nil
 }
 
 func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, parentID uint64) error {
 	param := &shardmgmt.CreateShardParam{
 		ParentShardID: parentID,
-		Creator: user.Address,
+		Creator:       user.Address,
 	}
 
 	buf := new(bytes.Buffer)
 	if err := param.Serialize(buf); err != nil {
-		return fmt.Errorf("failed to ser param: %s", err)
+		return fmt.Errorf("failed to ser createshard param: %s", err)
 	}
 	method := shardmgmt.CREATE_SHARD_NAME
 	contractAddress := utils.ShardMgmtContractAddress
@@ -41,23 +42,89 @@ func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, par
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
 	ctx.LogInfo("shard create txHash is :", txHash.ToHexString())
-	waitForBlock(ctx)
-
 	return nil
 }
 
-func ShardQuery(ctx *testframework.TestFrameworkContext, shardID uint64) (*shardmgmt.ShardState, error) {
+func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, networkSize uint32) error {
+	param := &shardmgmt.ConfigShardParam{
+		ShardID:           shardID,
+		NetworkMin:        networkSize,
+		StakeContractAddr: utils.OntContractAddress,
+	}
+
+	buf := new(bytes.Buffer)
+	if err := param.Serialize(buf); err != nil {
+		return fmt.Errorf("failed to ser config shard param: %s", err)
+	}
+
+	method := shardmgmt.CONFIG_SHARD_NAME
+	contractAddress := utils.ShardMgmtContractAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{buf.Bytes()})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("shard config txHash is :", txHash.ToHexString())
+	return nil
+}
+
+func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerPubKey string, stakeAmount uint64) error {
+	param := &shardmgmt.JoinShardParam{
+		ShardID:           shardID,
+		PeerOwner: user.Address,
+		PeerPubKey: peerPubKey,
+		StakeAmount: stakeAmount,
+	}
+
+	buf := new(bytes.Buffer)
+	if err := param.Serialize(buf); err != nil {
+		return fmt.Errorf("failed to ser join shard param: %s", err)
+	}
+
+	method := shardmgmt.JOIN_SHARD_NAME
+	contractAddress := utils.ShardMgmtContractAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{buf.Bytes()})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("join shard txHash is :", txHash.ToHexString())
+	return nil
+}
+
+func ShardActivate(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
+	param := &shardmgmt.ActivateShardParam{
+		ShardID:           shardID,
+	}
+
+	buf := new(bytes.Buffer)
+	if err := param.Serialize(buf); err != nil {
+		return fmt.Errorf("failed to ser activate shard param: %s", err)
+	}
+
+	method := shardmgmt.ACTIVATE_SHARD_NAME
+	contractAddress := utils.ShardMgmtContractAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{buf.Bytes()})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("activate shard txHash is :", txHash.ToHexString())
+	return nil
+}
+
+func ShardQuery(ctx *testframework.TestFrameworkContext, shardID uint64) (*shardstates.ShardState, error) {
 	globalStateValue, err := ctx.Ont.GetStorage(utils.ShardMgmtContractAddress.ToHexString(), []byte(shardmgmt.KEY_GLOBAL_STATE))
 	if err != nil {
 		return nil, fmt.Errorf("shardQeury, get global storage: %s", err)
 	}
-	gs := &shardmgmt.ShardMgmtGlobalState{}
+	gs := &shardstates.ShardMgmtGlobalState{}
 	if err := gs.Deserialize(bytes.NewBuffer(globalStateValue)); err != nil {
 		return nil, fmt.Errorf("failed to parse global state: %s", err)
 	}
 	fmt.Printf("global state: %v \n", gs)
 
-	shardIDBytes, err := shardmgmt.GetUint64Bytes(shardID)
+	shardIDBytes, err := shardutil.GetUint64Bytes(shardID)
 	if err != nil {
 		return nil, fmt.Errorf("get shard ID bytes: %s", err)
 	}
@@ -67,7 +134,7 @@ func ShardQuery(ctx *testframework.TestFrameworkContext, shardID uint64) (*shard
 		return nil, fmt.Errorf("shardQuery, get storage: %s", err)
 	}
 
-	s := &shardmgmt.ShardState{}
+	s := &shardstates.ShardState{}
 	if err := s.Deserialize(bytes.NewBuffer(value)); err != nil {
 		return nil, fmt.Errorf("shardQuery, deserialize shard state: %s", err)
 	}
