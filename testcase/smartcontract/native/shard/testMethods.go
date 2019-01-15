@@ -114,6 +114,7 @@ func TestShardConfig(ctx *testframework.TestFrameworkContext) bool {
 type ShardPeerJoinParam struct {
 	Path        string `json:"path"`
 	ShardID     uint64 `json:"shard_id"`
+	PeerAddress string `json:"peer_address"`
 	PeerPubKey  string `json:"peer_pub_key"`
 	StakeAmount uint64 `json:"stake_amount"`
 }
@@ -138,7 +139,7 @@ func TestShardPeerJoin(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := ShardPeerJoin(ctx, user, param.ShardID, param.PeerPubKey, param.StakeAmount); err != nil {
+	if err := ShardPeerJoin(ctx, user, param.ShardID, param.PeerAddress, param.PeerPubKey, param.StakeAmount); err != nil {
 		ctx.LogError("shard peer join failed: %s", err)
 		return false
 	}
@@ -148,8 +149,8 @@ func TestShardPeerJoin(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardActivateParam struct {
-	Path        string `json:"path"`
-	ShardID     uint64 `json:"shard_id"`
+	Path    string `json:"path"`
+	ShardID uint64 `json:"shard_id"`
 }
 
 func TestShardActivate(ctx *testframework.TestFrameworkContext) bool {

@@ -1,4 +1,3 @@
-
 package shard
 
 import "github.com/ontio/ontology-tool/testframework"
@@ -11,5 +10,3 @@ func TestShardMgmtContract() {
 	testframework.TFramework.RegTestCase("ShardActivate", TestShardActivate)
 	testframework.TFramework.RegTestCase("ShardQuery", TestShardQuery)
 }
-
-

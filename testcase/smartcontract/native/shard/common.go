@@ -1,10 +1,11 @@
 package shard
 
 import (
-	"github.com/ontio/ontology-tool/testframework"
 	"time"
-	"github.com/ontio/ontology/common/password"
+
 	sdk "github.com/ontio/ontology-go-sdk"
+	"github.com/ontio/ontology-tool/testframework"
+	"github.com/ontio/ontology/common/password"
 )
 
 func getAccountByPassword(ctx *testframework.TestFrameworkContext, path string) (*sdk.Account, bool) {
@@ -42,4 +43,3 @@ func ConcatKey(args ...[]byte) []byte {
 	}
 	return temp
 }
-

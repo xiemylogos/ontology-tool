@@ -68,11 +68,13 @@ func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 	return nil
 }
 
-func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerPubKey string, stakeAmount uint64) error {
+func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerAddress string,
+	peerPubKey string, stakeAmount uint64) error {
 	param := &shardmgmt.JoinShardParam{
-		ShardID:           shardID,
-		PeerOwner: user.Address,
-		PeerPubKey: peerPubKey,
+		ShardID:     shardID,
+		PeerOwner:   user.Address,
+		PeerAddress: peerAddress,
+		PeerPubKey:  peerPubKey,
 		StakeAmount: stakeAmount,
 	}
 
@@ -94,7 +96,7 @@ func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 
 func ShardActivate(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
 	param := &shardmgmt.ActivateShardParam{
-		ShardID:           shardID,
+		ShardID: shardID,
 	}
 
 	buf := new(bytes.Buffer)
