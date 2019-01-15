@@ -49,7 +49,8 @@ func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 	param := &shardmgmt.ConfigShardParam{
 		ShardID:           shardID,
 		NetworkMin:        networkSize,
-		StakeContractAddr: utils.OntContractAddress,
+		StakeAssetAddress: utils.OntContractAddress,
+		GasAssetAddress:   utils.OngContractAddress,
 	}
 
 	buf := new(bytes.Buffer)
