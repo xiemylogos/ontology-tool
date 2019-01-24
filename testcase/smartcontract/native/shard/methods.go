@@ -6,11 +6,11 @@ import (
 
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
+	"github.com/ontio/ontology/smartcontract/service/native/shardgas"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt/states"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt/utils"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
-	"github.com/ontio/ontology/smartcontract/service/native/shardgas"
 )
 
 func ShardInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error {
@@ -146,11 +146,23 @@ func ShardQuery(ctx *testframework.TestFrameworkContext, shardID uint64) (*shard
 	return s, nil
 }
 
+func ShardGasInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error {
+	method := shardgas.INIT_NAME
+	contractAddress := utils.ShardGasMgmtContractAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("shard gas init txHash is :", txHash.ToHexString())
+	return nil
+}
+
 func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, amount uint64) error {
 	param := shardgas.DepositGasParam{
 		UserAddress: user.Address,
-		ShardID: shardID,
-		Amount: amount,
+		ShardID:     shardID,
+		Amount:      amount,
 	}
 	buf := new(bytes.Buffer)
 	if err := param.Serialize(buf); err != nil {

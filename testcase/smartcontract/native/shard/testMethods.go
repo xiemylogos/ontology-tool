@@ -212,14 +212,43 @@ func TestShardQuery(ctx *testframework.TestFrameworkContext) bool {
 	return true
 }
 
+func TestShardGasInit(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/ShardGasInit.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ShardInitParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal shard gas init param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := ShardGasInit(ctx, user); err != nil {
+		ctx.LogError("shard init failed: %s", err)
+		return false
+	}
+
+	waitForBlock(ctx)
+	return true
+}
+
 type ShardDepositGasParam struct {
 	Path    string `json:"path"`
 	ShardID uint64 `json:"shard_id"`
-	Amount uint64 `json:"amount"`
+	Amount  uint64 `json:"amount"`
 }
 
 func TestShardDespoitGas(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardDespositGas.json"
+	configFile := "./params/ShardDepositGas.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
