@@ -47,9 +47,8 @@ func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account,
 }
 
 func ShardQueryGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
-	contractAddr := utils.ShardGasMgmtContractAddress.ToHexString()
-	key := ConcatKey([]byte(shardgas.KEY_BALANCE), user.Address[:])
-	value, err := ctx.Ont.GetShardStorage(shardID, contractAddr, key)
+	contractAddr := utils.OngContractAddress.ToHexString()
+	value, err := ctx.Ont.GetShardStorage(shardID, contractAddr, user.Address[:])
 	if err != nil {
 		return errors.NewDetailErr(err, errors.ErrNoCode, "get shard storage error")
 	}
