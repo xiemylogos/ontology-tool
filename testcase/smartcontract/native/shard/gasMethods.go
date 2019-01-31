@@ -1,0 +1,62 @@
+package shard
+
+import (
+	"bytes"
+	"fmt"
+
+	sdk "github.com/ontio/ontology-go-sdk"
+	"github.com/ontio/ontology-tool/testframework"
+	"github.com/ontio/ontology/smartcontract/service/native/shardgas"
+	"github.com/ontio/ontology/smartcontract/service/native/utils"
+	"github.com/ontio/ontology/errors"
+	"github.com/ontio/ontology/common/serialization"
+)
+
+func ShardGasInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error {
+	method := shardgas.INIT_NAME
+	contractAddress := utils.ShardGasMgmtContractAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("shard gas init txHash is :", txHash.ToHexString())
+	return nil
+}
+
+func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, amount uint64) error {
+	param := shardgas.DepositGasParam{
+		UserAddress: user.Address,
+		ShardID:     shardID,
+		Amount:      amount,
+	}
+	buf := new(bytes.Buffer)
+	if err := param.Serialize(buf); err != nil {
+		return fmt.Errorf("failed to ser shard deposit gas param: %s", err)
+	}
+
+	method := shardgas.DEPOSIT_GAS_NAME
+	contractAddress := utils.ShardGasMgmtContractAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{buf.Bytes()})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("shard deposit gas txHash is :", txHash.ToHexString())
+	return nil
+}
+
+func ShardQueryGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
+	contractAddr := utils.ShardGasMgmtContractAddress.ToHexString()
+	key := ConcatKey([]byte(shardgas.KEY_BALANCE), user.Address[:])
+	value, err := ctx.Ont.GetShardStorage(shardID, contractAddr, key)
+	if err != nil {
+		return errors.NewDetailErr(err, errors.ErrNoCode, "get shard storage error")
+	}
+	amount, err := serialization.ReadUint64(bytes.NewBuffer(value))
+	if err != nil {
+		return errors.NewDetailErr(err, errors.ErrNoCode, "parse ong amount")
+	}
+	ctx.LogInfo("shard %d, address: %s, amount: %d", shardID, user.Address.ToHexString(), amount)
+	return nil
+}
