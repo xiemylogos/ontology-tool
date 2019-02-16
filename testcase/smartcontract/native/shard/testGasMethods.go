@@ -103,3 +103,39 @@ func TestShardQueryGas(ctx *testframework.TestFrameworkContext) bool {
 
 	return true
 }
+
+type ShardSendPingParam struct {
+	Path        string `json:"path"`
+	FromShardID uint64 `json:"from_shard_id"`
+	ToShardID   uint64 `json:"to_shard_id"`
+	Param       string `json:"param"`
+}
+
+func TestShardSendPing(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/ShardSendPing.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ShardSendPingParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal shard deposit gas param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	ctx.LogInfo("send shard ping from %d to %d, param %s", param.FromShardID, param.ToShardID, param.Param)
+	if err := ShardSendPing(ctx, user, param.FromShardID, param.ToShardID, param.Param); err != nil {
+		ctx.LogError("shard ping failed: %s", err)
+		return false
+	}
+
+	return true
+}
