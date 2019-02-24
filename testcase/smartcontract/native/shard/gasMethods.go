@@ -6,11 +6,11 @@ import (
 
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
-	"github.com/ontio/ontology/smartcontract/service/native/shardgas"
-	"github.com/ontio/ontology/smartcontract/service/native/utils"
-	"github.com/ontio/ontology/errors"
 	"github.com/ontio/ontology/common/serialization"
+	"github.com/ontio/ontology/errors"
+	"github.com/ontio/ontology/smartcontract/service/native/shardgas"
 	"github.com/ontio/ontology/smartcontract/service/native/shardping"
+	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
 
 func ShardGasInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error {
@@ -21,7 +21,7 @@ func ShardGasInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) er
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("shard gas init txHash is :", txHash.ToHexString())
+	ctx.LogInfo("shard gas init txHash is :%s", txHash.ToHexString())
 	return nil
 }
 
@@ -43,7 +43,7 @@ func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account,
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("shard deposit gas txHash is :", txHash.ToHexString())
+	ctx.LogInfo("shard deposit gas txHash is :%s", txHash.ToHexString())
 	return nil
 }
 
@@ -64,8 +64,8 @@ func ShardQueryGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 func ShardSendPing(ctx *testframework.TestFrameworkContext, user *sdk.Account, fromShardID, toShardID uint64, txt string) error {
 	param := shardping.ShardPingParam{
 		FromShard: fromShardID,
-		ToShard: toShardID,
-		Param: txt,
+		ToShard:   toShardID,
+		Param:     txt,
 	}
 	buf := new(bytes.Buffer)
 	if err := param.Serialize(buf); err != nil {
@@ -79,6 +79,6 @@ func ShardSendPing(ctx *testframework.TestFrameworkContext, user *sdk.Account, f
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("shard send ping txHash is :", txHash.ToHexString())
+	ctx.LogInfo("shard send ping txHash is :%s", txHash.ToHexString())
 	return nil
 }

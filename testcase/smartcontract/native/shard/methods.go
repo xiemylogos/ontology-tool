@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
+	"github.com/ontio/ontology/common/config"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt/states"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt/utils"
@@ -20,7 +21,7 @@ func ShardInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("shard init txHash is :", txHash.ToHexString())
+	ctx.LogInfo("shard init txHash is :%s", txHash.ToHexString())
 	return nil
 }
 
@@ -41,16 +42,17 @@ func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, par
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("shard create txHash is :", txHash.ToHexString())
+	ctx.LogInfo("shard create txHash is :%s", txHash.ToHexString())
 	return nil
 }
 
-func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, networkSize uint32) error {
+func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, networkSize uint32, vbft *config.VBFTConfig) error {
 	param := &shardmgmt.ConfigShardParam{
 		ShardID:           shardID,
 		NetworkMin:        networkSize,
 		StakeAssetAddress: utils.OntContractAddress,
 		GasAssetAddress:   utils.OngContractAddress,
+		VbftConfigData:    vbft,
 	}
 
 	buf := new(bytes.Buffer)
@@ -65,7 +67,7 @@ func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("shard config txHash is :", txHash.ToHexString())
+	ctx.LogInfo("shard config txHash is :%s", txHash.ToHexString())
 	return nil
 }
 
@@ -91,7 +93,7 @@ func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("join shard txHash is :", txHash.ToHexString())
+	ctx.LogInfo("join shard txHash is :%s", txHash.ToHexString())
 	return nil
 }
 
@@ -112,7 +114,7 @@ func ShardActivate(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("activate shard txHash is :", txHash.ToHexString())
+	ctx.LogInfo("activate shard txHash is :%s", txHash.ToHexString())
 	return nil
 }
 

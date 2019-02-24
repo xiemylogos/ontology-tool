@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 
 	"github.com/ontio/ontology-tool/testframework"
+	"github.com/ontio/ontology/common/config"
 )
 
 type ShardInitParam struct {
@@ -77,9 +78,10 @@ func TestShardCreate(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardConfigParam struct {
-	Path        string `json:"path"`
-	ShardID     uint64 `json:"shard_id"`
-	NetworkSize uint32 `json:"network_size"`
+	Path        string             `json:"path"`
+	ShardID     uint64             `json:"shard_id"`
+	NetworkSize uint32             `json:"network_size"`
+	VbftConfig  *config.VBFTConfig `json:"vbft_config"`
 }
 
 func TestShardConfig(ctx *testframework.TestFrameworkContext) bool {
@@ -102,7 +104,7 @@ func TestShardConfig(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := ShardConfig(ctx, user, param.ShardID, param.NetworkSize); err != nil {
+	if err := ShardConfig(ctx, user, param.ShardID, param.NetworkSize, param.VbftConfig); err != nil {
 		ctx.LogError("shard init failed: %s", err)
 		return false
 	}

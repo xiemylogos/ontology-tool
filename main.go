@@ -19,15 +19,16 @@ package main
 
 import (
 	"flag"
+	"math/rand"
+	"strings"
+	"time"
+
 	log4 "github.com/alecthomas/log4go"
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/common"
 	_ "github.com/ontio/ontology-tool/testcase"
 	"github.com/ontio/ontology-tool/testframework"
 	"github.com/ontio/ontology/common/log"
-	"math/rand"
-	"strings"
-	"time"
 )
 
 var (
