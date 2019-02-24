@@ -1,0 +1,6 @@
+{
+   "Path": "../ontology/wallet.dat",
+   "from_shard_id": 1,
+   "to_shard_id": 2,
+   "param": "test-string"
+}
