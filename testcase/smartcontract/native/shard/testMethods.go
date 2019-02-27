@@ -81,7 +81,7 @@ type ShardConfigParam struct {
 	Path        string             `json:"path"`
 	ShardID     uint64             `json:"shard_id"`
 	NetworkSize uint32             `json:"network_size"`
-	VbftConfig  *config.VBFTConfig `json:"vbft_config"`
+	VbftConfig  *config.VBFTConfig `json:"vbft"`
 }
 
 func TestShardConfig(ctx *testframework.TestFrameworkContext) bool {
@@ -210,6 +210,6 @@ func TestShardInfoQuery(ctx *testframework.TestFrameworkContext) bool {
 
 	buf := new(bytes.Buffer)
 	s.Serialize(buf)
-	fmt.Printf("shard: %s", string(buf.Bytes()))
+	fmt.Printf("shard: %v", string(buf.Bytes()))
 	return true
 }
