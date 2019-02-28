@@ -3,6 +3,7 @@ package shard
 import (
 	"bytes"
 	"fmt"
+	"github.com/ontio/ontology/core/types"
 
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
@@ -26,8 +27,9 @@ func ShardInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error
 }
 
 func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, parentID uint64) error {
+	tShardId, _ := types.NewShardID(parentID)
 	param := &shardmgmt.CreateShardParam{
-		ParentShardID: parentID,
+		ParentShardID: tShardId,
 		Creator:       user.Address,
 	}
 
@@ -47,8 +49,9 @@ func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, par
 }
 
 func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, networkSize uint32, vbft *config.VBFTConfig) error {
+	tShardId, _ := types.NewShardID(shardID)
 	param := &shardmgmt.ConfigShardParam{
-		ShardID:           shardID,
+		ShardID:           tShardId,
 		NetworkMin:        networkSize,
 		StakeAssetAddress: utils.OntContractAddress,
 		GasAssetAddress:   utils.OngContractAddress,
@@ -73,8 +76,9 @@ func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 
 func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerAddress string,
 	peerPubKey string, stakeAmount uint64) error {
+	tShardId, _ := types.NewShardID(shardID)
 	param := &shardmgmt.JoinShardParam{
-		ShardID:     shardID,
+		ShardID:     tShardId,
 		PeerOwner:   user.Address,
 		PeerAddress: peerAddress,
 		PeerPubKey:  peerPubKey,
@@ -98,8 +102,9 @@ func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 }
 
 func ShardActivate(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
+	tShardId, _ := types.NewShardID(shardID)
 	param := &shardmgmt.ActivateShardParam{
-		ShardID: shardID,
+		ShardID: tShardId,
 	}
 
 	buf := new(bytes.Buffer)

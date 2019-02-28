@@ -3,10 +3,11 @@ package shard
 import (
 	"bytes"
 	"fmt"
+	"github.com/ontio/ontology/core/types"
+	"github.com/ontio/ontology/http/base/common"
 
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
-	"github.com/ontio/ontology/common/serialization"
 	"github.com/ontio/ontology/errors"
 	"github.com/ontio/ontology/smartcontract/service/native/shardgas"
 	"github.com/ontio/ontology/smartcontract/service/native/shardping"
@@ -26,9 +27,10 @@ func ShardGasInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) er
 }
 
 func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, amount uint64) error {
+	tShardId, _ := types.NewShardID(shardID)
 	param := shardgas.DepositGasParam{
 		UserAddress: user.Address,
-		ShardID:     shardID,
+		ShardID:     tShardId,
 		Amount:      amount,
 	}
 	buf := new(bytes.Buffer)
@@ -48,23 +50,36 @@ func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account,
 }
 
 func ShardQueryGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
-	contractAddr := utils.OngContractAddress.ToHexString()
-	value, err := ctx.Ont.GetShardStorage(shardID, contractAddr, user.Address[:])
+	contractAddr := utils.ShardGasMgmtContractAddress
+	tShardId, _ := types.NewShardID(shardID)
+	param := shardgas.GetShardBalanceParam{
+		UserAddress: user.Address,
+		ShardId:     tShardId,
+	}
+	buf := new(bytes.Buffer)
+	if err := param.Serialize(buf); err != nil {
+		return fmt.Errorf("failed to ser get shard gas param: %s", err)
+	}
+	preTx, err := common.NewNativeInvokeTransaction(0, 0, contractAddr, byte(0),
+		shardgas.GET_SHARD_BALANCE, []interface{}{buf.Bytes()})
+	value, err := ctx.Ont.PreExecTransaction(preTx)
 	if err != nil {
 		return errors.NewDetailErr(err, errors.ErrNoCode, "get shard storage error")
 	}
-	amount, err := serialization.ReadUint64(bytes.NewBuffer(value))
+	amount, err := value.Result.ToInteger()
 	if err != nil {
 		return errors.NewDetailErr(err, errors.ErrNoCode, "parse ong amount")
 	}
-	ctx.LogInfo("shard %d, address: %s, amount: %d", shardID, user.Address.ToHexString(), amount)
+	ctx.LogInfo("shard %d, address: %s, amount: %d", shardID, user.Address.ToBase58(), amount)
 	return nil
 }
 
 func ShardSendPing(ctx *testframework.TestFrameworkContext, user *sdk.Account, fromShardID, toShardID uint64, txt string) error {
+	tFromShardId, _ := types.NewShardID(fromShardID)
+	tToShardId, _ := types.NewShardID(toShardID)
 	param := shardping.ShardPingParam{
-		FromShard: fromShardID,
-		ToShard:   toShardID,
+		FromShard: tFromShardId,
+		ToShard:   tToShardId,
 		Param:     txt,
 	}
 	buf := new(bytes.Buffer)

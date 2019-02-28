@@ -10,4 +10,5 @@ vendor/*
 ontology-tool
 config_test.json
 wallet.dat
-main.exe 
+main.exe
+main
