@@ -1,0 +1,8 @@
+{
+   "Path": "../ontology/wallet.dat",
+   "shard_id": 1,
+   "room_no": 10,
+   "shard_id_2": 2,
+   "room_no_2": 10,
+   "transactional": false
+}

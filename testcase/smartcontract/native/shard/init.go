@@ -15,9 +15,10 @@ func TestShardMgmtContract() {
 	testframework.TFramework.RegTestCase("ShardQueryGas", TestShardQueryGas)
 
 	testframework.TFramework.RegTestCase("ShardSendPing", TestShardSendPing)
-
 	testframework.TFramework.RegTestCase("ShardHotelInit", TestShardHotelInit)
 	testframework.TFramework.RegTestCase("ShardHotelQuery", TestShardHotelQuery)
 	testframework.TFramework.RegTestCase("ShardHotelReserve", TestShardHotelReserve)
 	testframework.TFramework.RegTestCase("ShardHotelCheckout", TestShardHotelCheckout)
+	testframework.TFramework.RegTestCase("ShardHotelReserve2", TestShardHotelReserve2)
+	testframework.TFramework.RegTestCase("ShardHotelCheckout2", TestShardHotelCheckout2)
 }
