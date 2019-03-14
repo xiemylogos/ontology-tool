@@ -3,9 +3,13 @@ package shard
 import (
 	"bytes"
 	"fmt"
+
+	"github.com/ontio/ontology-crypto/keypair"
+	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/core/types"
 
 	sdk "github.com/ontio/ontology-go-sdk"
+	com "github.com/ontio/ontology-tool/testcase/smartcontract/native/common"
 	"github.com/ontio/ontology-tool/testframework"
 	"github.com/ontio/ontology/common/config"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt"
@@ -14,11 +18,18 @@ import (
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
 
-func ShardInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error {
+func ShardInit(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account) error {
 	method := shardmgmt.INIT_NAME
 	contractAddress := utils.ShardMgmtContractAddress
-	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-		contractAddress, method, []interface{}{})
+	txHash := common.Uint256{}
+	var err error
+	if len(users) == 1 {
+		txHash, err = ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), users[0], 0,
+			contractAddress, method, []interface{}{})
+	} else {
+		txHash, err = com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, 0,
+			contractAddress, method, []interface{}{})
+	}
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}

@@ -5,13 +5,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"time"
 
+	"github.com/ontio/ontology-crypto/keypair"
+	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
 	"github.com/ontio/ontology/common/config"
 )
 
 type ShardInitParam struct {
-	Path string `json:"path"`
+	Path []string
 }
 
 func TestShardInit(ctx *testframework.TestFrameworkContext) bool {
@@ -27,18 +30,21 @@ func TestShardInit(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("unmarshal shard init param: %s", err)
 		return false
 	}
-
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
+	var users []*sdk.Account
+	var pubKeys []keypair.PublicKey
+	time.Sleep(1 * time.Second)
+	for _, path := range param.Path {
+		user, ok := getAccountByPassword(ctx, path)
+		if !ok {
+			return false
+		}
+		users = append(users, user)
+		pubKeys = append(pubKeys, user.PublicKey)
 	}
-
-	if err := ShardInit(ctx, user); err != nil {
+	if err := ShardInit(ctx, pubKeys, users); err != nil {
 		ctx.LogError("shard init failed: %s", err)
 		return false
 	}
-
 	waitForBlock(ctx)
 	return true
 }

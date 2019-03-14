@@ -6,6 +6,7 @@ import (
 
 	"github.com/ontio/ontology-crypto/keypair"
 	sdk "github.com/ontio/ontology-go-sdk"
+	com "github.com/ontio/ontology-tool/testcase/smartcontract/native/common"
 	"github.com/ontio/ontology-tool/testframework"
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/serialization"
@@ -118,7 +119,7 @@ func approveCandidateMultiSign(ctx *testframework.TestFrameworkContext, pubKeys 
 	}
 	contractAddress := utils.GovernanceContractAddress
 	method := "approveCandidate"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{params})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -150,7 +151,7 @@ func rejectCandidateMultiSign(ctx *testframework.TestFrameworkContext, pubKeys [
 	}
 	contractAddress := utils.GovernanceContractAddress
 	method := "rejectCandidate"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{params})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -322,7 +323,7 @@ func commitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Account) bool
 func commitDposMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account) bool {
 	contractAddress := utils.GovernanceContractAddress
 	method := "commitDpos"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -371,7 +372,7 @@ func blackNodeMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypa
 	}
 	contractAddress := utils.GovernanceContractAddress
 	method := "blackNode"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{params})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -403,7 +404,7 @@ func whiteNodeMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypa
 	}
 	contractAddress := utils.GovernanceContractAddress
 	method := "whiteNode"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{params})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -429,7 +430,7 @@ func updateConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, co
 func updateConfigMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, config *governance.Configuration) bool {
 	contractAddress := utils.GovernanceContractAddress
 	method := "updateConfig"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{config})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -455,7 +456,7 @@ func updateGlobalParam(ctx *testframework.TestFrameworkContext, user *sdk.Accoun
 func updateGlobalParamMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, globalParam *governance.GlobalParam) bool {
 	contractAddress := utils.GovernanceContractAddress
 	method := "updateGlobalParam"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{globalParam})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -481,7 +482,7 @@ func updateGlobalParam2(ctx *testframework.TestFrameworkContext, user *sdk.Accou
 func updateGlobalParam2MultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, globalParam2 *governance.GlobalParam2) bool {
 	contractAddress := utils.GovernanceContractAddress
 	method := "updateGlobalParam2"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{globalParam2})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -507,7 +508,7 @@ func updateSplitCurve(ctx *testframework.TestFrameworkContext, user *sdk.Account
 func updateSplitCurveMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, splitCurve *governance.SplitCurve) bool {
 	contractAddress := utils.GovernanceContractAddress
 	method := "updateSplitCurve"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{splitCurve})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -533,7 +534,7 @@ func setPromisePos(ctx *testframework.TestFrameworkContext, user *sdk.Account, p
 func setPromisePosMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, promisePos *governance.PromisePos) bool {
 	contractAddress := utils.GovernanceContractAddress
 	method := "setPromisePos"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{promisePos})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -583,7 +584,7 @@ func transferPenaltyMultiSign(ctx *testframework.TestFrameworkContext, pubKeys [
 	}
 	contractAddress := utils.GovernanceContractAddress
 	method := "transferPenalty"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{params})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -652,7 +653,7 @@ func transferOntMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []key
 	}
 	contractAddress := utils.OntContractAddress
 	method := "transfer"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{transfers})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -678,7 +679,7 @@ func transferOntMultiSignToMultiSign(ctx *testframework.TestFrameworkContext, pu
 	}
 	contractAddress := utils.OntContractAddress
 	method := "transfer"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{transfers})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -704,7 +705,7 @@ func transferOngMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []key
 	}
 	contractAddress := utils.OngContractAddress
 	method := "transfer"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{transfers})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -730,7 +731,7 @@ func transferOngMultiSignToMultiSign(ctx *testframework.TestFrameworkContext, pu
 	}
 	contractAddress := utils.OngContractAddress
 	method := "transfer"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{transfers})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -753,7 +754,7 @@ func transferFromOngMultiSign(ctx *testframework.TestFrameworkContext, pubKeys [
 	}
 	contractAddress := utils.OngContractAddress
 	method := "transferFrom"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{params})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
@@ -776,7 +777,7 @@ func transferFromOngMultiSignToMultiSign(ctx *testframework.TestFrameworkContext
 	}
 	contractAddress := utils.OngContractAddress
 	method := "transferFrom"
-	txHash, err := invokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
+	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{params})
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)

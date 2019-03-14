@@ -3,7 +3,10 @@ package shard
 import (
 	"encoding/json"
 	"io/ioutil"
+	"time"
 
+	"github.com/ontio/ontology-crypto/keypair"
+	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
 )
 
@@ -20,14 +23,18 @@ func TestShardGasInit(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("unmarshal shard gas init param: %s", err)
 		return false
 	}
-
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
+	var users []*sdk.Account
+	var pubKeys []keypair.PublicKey
+	time.Sleep(1 * time.Second)
+	for _, path := range param.Path {
+		user, ok := getAccountByPassword(ctx, path)
+		if !ok {
+			return false
+		}
+		users = append(users, user)
+		pubKeys = append(pubKeys, user.PublicKey)
 	}
-
-	if err := ShardGasInit(ctx, user); err != nil {
+	if err := ShardGasInit(ctx, pubKeys, users); err != nil {
 		ctx.LogError("shard init failed: %s", err)
 		return false
 	}

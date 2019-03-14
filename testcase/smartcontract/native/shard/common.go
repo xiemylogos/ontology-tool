@@ -1,11 +1,11 @@
 package shard
 
 import (
-	"github.com/ontio/ontology-tool/common"
 	"time"
 
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
+	"github.com/ontio/ontology/common/password"
 )
 
 func getAccountByPassword(ctx *testframework.TestFrameworkContext, path string) (*sdk.Account, bool) {
@@ -14,12 +14,12 @@ func getAccountByPassword(ctx *testframework.TestFrameworkContext, path string) 
 		ctx.LogError("open wallet error:%s", err)
 		return nil, false
 	}
-	//pwd, err := password.GetPassword()
-	//if err != nil {
-	//	ctx.LogError("getPassword error:%s", err)
-	//	return nil, false
-	//}
-	user, err := wallet.GetDefaultAccount([]byte(common.DefConfig.Password))
+	pwd, err := password.GetPassword()
+	if err != nil {
+		ctx.LogError("getPassword error:%s", err)
+		return nil, false
+	}
+	user, err := wallet.GetDefaultAccount(pwd)
 	if err != nil {
 		ctx.LogError("getDefaultAccount error:%s", err)
 		return nil, false
