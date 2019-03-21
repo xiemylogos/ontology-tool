@@ -119,6 +119,76 @@ func TestShardConfig(ctx *testframework.TestFrameworkContext) bool {
 	return true
 }
 
+type ShardPeerApplyJoinParam struct {
+	Path       string `json:"path"`
+	ShardId    uint64 `json:"shard_id"`
+	PeerPubKey string `json:"peer_pub_key"`
+}
+
+func TestShardPeerApplyJoin(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/ShardPeerApplyJoin.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ShardPeerApplyJoinParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := ShardApplyJoin(ctx, user, param.ShardId, param.PeerPubKey); err != nil {
+		ctx.LogError("shard peer apply join failed: %s", err)
+		return false
+	}
+
+	waitForBlock(ctx)
+	return true
+}
+
+type ShardPeerApproveJoinParam struct {
+	Path       string   `json:"path"`
+	ShardId    uint64   `json:"shard_id"`
+	PeerPubKey []string `json:"peer_pub_key"`
+}
+
+func TestShardPeerApproveJoin(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/ShardPeerApproveJoin.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ShardPeerApproveJoinParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := ApproveJoin(ctx, user, param.ShardId, param.PeerPubKey); err != nil {
+		ctx.LogError("shard peer approve join failed: %s", err)
+		return false
+	}
+
+	waitForBlock(ctx)
+	return true
+}
+
 type ShardPeerJoinParam struct {
 	Path        string `json:"path"`
 	ShardID     uint64 `json:"shard_id"`
@@ -147,7 +217,7 @@ func TestShardPeerJoin(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := ShardPeerJoin(ctx, user, param.ShardID, param.PeerAddress, param.PeerPubKey, param.StakeAmount); err != nil {
+	if err := ShardPeerJoin(ctx, user, param.ShardID, param.PeerPubKey, param.StakeAmount); err != nil {
 		ctx.LogError("shard peer join failed: %s", err)
 		return false
 	}

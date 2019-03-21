@@ -85,13 +85,55 @@ func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 	return nil
 }
 
-func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerAddress string,
-	peerPubKey string, stakeAmount uint64) error {
+func ShardApplyJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerPubKey string) error {
+	tShardId, _ := types.NewShardID(shardID)
+	applyJoinParam := &shardmgmt.ApplyJoinShardParam{
+		ShardId:    tShardId,
+		PeerOwner:  user.Address,
+		PeerPubKey: peerPubKey,
+	}
+	buf := new(bytes.Buffer)
+	if err := applyJoinParam.Serialize(buf); err != nil {
+		return fmt.Errorf("failed to ser param: %s", err)
+	}
+	method := shardmgmt.APPLY_JOIN_SHARD_NAME
+	contractAddress := utils.ShardMgmtContractAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{buf.Bytes()})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("apply join shard txHash is :%s", txHash.ToHexString())
+	return nil
+}
+
+func ApproveJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerPubKey []string) error {
+	tShardId, _ := types.NewShardID(shardID)
+	applyJoinParam := &shardmgmt.ApproveJoinShardParam{
+		ShardId:    tShardId,
+		PeerPubKey: peerPubKey,
+	}
+	buf := new(bytes.Buffer)
+	if err := applyJoinParam.Serialize(buf); err != nil {
+		return fmt.Errorf("failed to ser param: %s", err)
+	}
+	method := shardmgmt.APPROVE_JOIN_SHARD_NAME
+	contractAddress := utils.ShardMgmtContractAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{buf.Bytes()})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("apply join shard txHash is :%s", txHash.ToHexString())
+	return nil
+}
+
+func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerPubKey string,
+	stakeAmount uint64) error {
 	tShardId, _ := types.NewShardID(shardID)
 	param := &shardmgmt.JoinShardParam{
 		ShardID:     tShardId,
 		PeerOwner:   user.Address,
-		PeerAddress: peerAddress,
 		PeerPubKey:  peerPubKey,
 		StakeAmount: stakeAmount,
 	}

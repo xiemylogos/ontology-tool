@@ -3,6 +3,7 @@ package shard
 import (
 	"bytes"
 	"fmt"
+	"github.com/ontio/ontology/core/chainmgr"
 
 	"github.com/ontio/ontology-crypto/keypair"
 	sdk "github.com/ontio/ontology-go-sdk"
@@ -38,21 +39,15 @@ func ShardGasInit(ctx *testframework.TestFrameworkContext, pubKeys []keypair.Pub
 }
 
 func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, amount uint64) error {
-	tShardId, _ := types.NewShardID(shardID)
 	param := shardgas.DepositGasParam{
-		UserAddress: user.Address,
-		ShardID:     tShardId,
-		Amount:      amount,
+		User:    user.Address,
+		ShardId: shardID,
+		Amount:  amount,
 	}
-	buf := new(bytes.Buffer)
-	if err := param.Serialize(buf); err != nil {
-		return fmt.Errorf("failed to ser shard deposit gas param: %s", err)
-	}
-
 	method := shardgas.DEPOSIT_GAS_NAME
 	contractAddress := utils.ShardGasMgmtContractAddress
 	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-		contractAddress, method, []interface{}{buf.Bytes()})
+		contractAddress, method, []interface{}{param})
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
@@ -62,17 +57,9 @@ func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account,
 
 func ShardQueryGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
 	contractAddr := utils.ShardGasMgmtContractAddress
-	tShardId, _ := types.NewShardID(shardID)
-	param := shardgas.GetShardBalanceParam{
-		UserAddress: user.Address,
-		ShardId:     tShardId,
-	}
-	buf := new(bytes.Buffer)
-	if err := param.Serialize(buf); err != nil {
-		return fmt.Errorf("failed to ser get shard gas param: %s", err)
-	}
 	preTx, err := common.NewNativeInvokeTransaction(0, 0, contractAddr, byte(0),
-		shardgas.GET_SHARD_BALANCE, []interface{}{buf.Bytes()})
+		shardgas.GET_SHARD_GAS_BALANCE_NAME, []interface{}{shardID})
+	preTx.ShardID = shardID
 	value, err := ctx.Ont.PreExecTransaction(preTx)
 	if err != nil {
 		return errors.NewDetailErr(err, errors.ErrNoCode, "get shard storage error")
@@ -82,6 +69,57 @@ func ShardQueryGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 		return errors.NewDetailErr(err, errors.ErrNoCode, "parse ong amount")
 	}
 	ctx.LogInfo("shard %d, address: %s, amount: %d", shardID, user.Address.ToBase58(), amount)
+	return nil
+}
+
+func ShardUserWithdrawGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, amount uint64) error {
+	contractAddr := utils.ShardGasMgmtContractAddress
+	param := &shardgas.UserWithdrawGasParam{
+		User:   user.Address,
+		Amount: amount,
+	}
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(fmt.Sprintf("http://localhost:%d", chainmgr.GetShardRpcPortByShardID(shardID)))
+	tx, err := ctx.Ont.Native.InvokeShardNativeContract(shardID, ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddr, shardgas.USER_WITHDRAW_GAS_NAME, []interface{}{param})
+	if err != nil {
+		return fmt.Errorf("send tx failed, err: %s", err)
+	}
+	ctx.LogInfo("success, withdraw shard gas tx hash is %s", tx.ToHexString())
+	return nil
+}
+
+func QueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(fmt.Sprintf("http://localhost:%d", chainmgr.GetShardRpcPortByShardID(shardID)))
+	contractAddr := utils.ShardGasMgmtContractAddress
+	preTx, err := common.NewNativeInvokeTransaction(0, 0, contractAddr, byte(0),
+		shardgas.GET_UN_FINISH_WITHDRAW, []interface{}{user.Address})
+	preTx.Version = 1
+	preTx.ShardID = shardID
+	value, err := ctx.Ont.PreExecTransaction(preTx)
+	if err != nil {
+		return fmt.Errorf("pre-execute err: %s", err)
+	}
+	amount, err := value.Result.ToString()
+	if err != nil {
+		return fmt.Errorf("parse result failed, err: %s", err)
+	}
+	ctx.LogInfo("shard %d, address: %s, amount: %s", shardID, user.Address.ToBase58(), amount)
+	return nil
+}
+
+func ShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID, withdrawId uint64) error {
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(fmt.Sprintf("http://localhost:%d", chainmgr.GetShardRpcPortByShardID(shardID)))
+	contractAddr := utils.ShardGasMgmtContractAddress
+	param := &shardgas.UserRetryWithdrawParam{
+		User:       user.Address,
+		WithdrawId: withdrawId,
+	}
+	tx, err := ctx.Ont.Native.InvokeShardNativeContract(shardID, ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddr, shardgas.WITHDRAW_RETRY_NAME, []interface{}{param})
+	if err != nil {
+		return fmt.Errorf("send tx failed, err: %s", err)
+	}
+	ctx.LogInfo("success, withdraw shard gas tx hash is %s", tx.ToHexString())
 	return nil
 }
 

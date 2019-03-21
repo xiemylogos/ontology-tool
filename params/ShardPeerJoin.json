@@ -1,7 +1,7 @@
 {
-   "Path": "../ontology/wallet.dat",
-   "shard_id": 1,
-   "peer_address": "127.0.0.1:12345",
-   "peer_pub_key": "03aca5f78d06cdf8ad9e999e72a932623d8996c99fbfff3fb7b3a5612c6f0d3b11",
-   "stake_amount": 1000000
+  "Path": "../ontology/wallet.dat",
+  "shard_id": 1,
+  "peer_address": "127.0.0.1:12345",
+  "peer_pub_key": "03c235f5e5ad2c4c58f17c99b051a23f9e32a2c1eba48dc500b6f11b5f7bd436fd",
+  "stake_amount": 1000000
 }

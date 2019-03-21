@@ -78,7 +78,7 @@ func TestShardDespoitGas(ctx *testframework.TestFrameworkContext) bool {
 	return true
 }
 
-type ShardQueryGasParam struct {
+type QueryShardGasParam struct {
 	Path    string `json:"path"`
 	ShardID uint64 `json:"shard_id"`
 }
@@ -91,9 +91,9 @@ func TestShardQueryGas(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	param := &ShardQueryGasParam{}
+	param := &QueryShardGasParam{}
 	if err := json.Unmarshal(data, param); err != nil {
-		ctx.LogError("unmarshal shard deposit gas param: %s", err)
+		ctx.LogError("unmarshal query shard gas param: %s", err)
 		return false
 	}
 
@@ -104,7 +104,108 @@ func TestShardQueryGas(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	if err := ShardQueryGas(ctx, user, param.ShardID); err != nil {
-		ctx.LogError("shard deposit gas failed: %s", err)
+		ctx.LogError("shard query gas failed: %s", err)
+		return false
+	}
+
+	return true
+}
+
+type ShardUserWithdrawGasParam struct {
+	Path    string `json:"path"`
+	ShardID uint64 `json:"shard_id"`
+	Amount  uint64 `json:"amount"`
+}
+
+func TestShardUserWithdrawGas(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/ShardUserWithdrawGas.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ShardUserWithdrawGasParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal withdraw shard gas param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := ShardUserWithdrawGas(ctx, user, param.ShardID, param.Amount); err != nil {
+		ctx.LogError("user withdraw shard gas failed: %s", err)
+		return false
+	}
+
+	return true
+}
+
+type QueryShardUserUnFinishWithdrawParam struct {
+	Path    string `json:"path"`
+	ShardID uint64 `json:"shard_id"`
+}
+
+func TestQueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/ShardUserQueryUnFinishWithdraw.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &QueryShardUserUnFinishWithdrawParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := QueryShardUserUnFinishWithdraw(ctx, user, param.ShardID); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+
+	return true
+}
+
+type ShardRetryWithdrawParam struct {
+	Path       string `json:"path"`
+	ShardID    uint64 `json:"shard_id"`
+	WithdrawId uint64 `json:"withdraw_id"`
+}
+
+func TestShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/ShardUserRetryWithdrawGas.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ShardRetryWithdrawParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := ShardUserRetryWithdraw(ctx, user, param.ShardID, param.WithdrawId); err != nil {
+		ctx.LogError("failed: %s", err)
 		return false
 	}
 
