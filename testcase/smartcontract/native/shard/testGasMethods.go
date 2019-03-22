@@ -212,6 +212,34 @@ func TestShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext) bool {
 	return true
 }
 
+func TestShardCommitDpos(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/ShardCommitDpos.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ShardRetryWithdrawParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := ShardCommitDpos(ctx, user, param.ShardID); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+
+	return true
+}
+
 type ShardSendPingParam struct {
 	Path        string `json:"path"`
 	FromShardID uint64 `json:"from_shard_id"`

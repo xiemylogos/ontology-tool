@@ -123,6 +123,17 @@ func ShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext, user *sdk.A
 	return nil
 }
 
+func ShardCommitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
+	contractAddr := utils.ShardGasMgmtContractAddress
+	tx, err := ctx.Ont.Native.InvokeShardNativeContract(shardID, ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddr, shardgas.SHARD_COMMIT_DPOS, []interface{}{})
+	if err != nil {
+		return fmt.Errorf("send tx failed, err: %s", err)
+	}
+	ctx.LogInfo("success, shard commit dpos tx hash is %s", tx.ToHexString())
+	return nil
+}
+
 func ShardSendPing(ctx *testframework.TestFrameworkContext, user *sdk.Account, fromShardID, toShardID uint64, txt string) error {
 	tFromShardId, _ := types.NewShardID(fromShardID)
 	tToShardId, _ := types.NewShardID(toShardID)
