@@ -217,7 +217,7 @@ func TestShardPeerJoin(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := ShardPeerJoin(ctx, user, param.ShardID, param.PeerPubKey, param.StakeAmount); err != nil {
+	if err := ShardPeerJoin(ctx, user, param.ShardID, param.PeerPubKey, param.StakeAmount, param.PeerAddress); err != nil {
 		ctx.LogError("shard peer join failed: %s", err)
 		return false
 	}

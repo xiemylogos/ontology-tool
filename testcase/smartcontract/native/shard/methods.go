@@ -129,10 +129,11 @@ func ApproveJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 }
 
 func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerPubKey string,
-	stakeAmount uint64) error {
+	stakeAmount uint64, ipAddress string) error {
 	tShardId, _ := types.NewShardID(shardID)
 	param := &shardmgmt.JoinShardParam{
 		ShardID:     tShardId,
+		IpAddress:   ipAddress,
 		PeerOwner:   user.Address,
 		PeerPubKey:  peerPubKey,
 		StakeAmount: stakeAmount,
