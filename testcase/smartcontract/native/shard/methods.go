@@ -85,29 +85,31 @@ func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 	return nil
 }
 
-func ShardApplyJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerPubKey string) error {
+func ShardApplyJoin(ctx *testframework.TestFrameworkContext, shardID uint64, user []*sdk.Account, peerPubKey []string) error {
 	tShardId, _ := types.NewShardID(shardID)
-	applyJoinParam := &shardmgmt.ApplyJoinShardParam{
-		ShardId:    tShardId,
-		PeerOwner:  user.Address,
-		PeerPubKey: peerPubKey,
+	for index, acc := range user {
+		applyJoinParam := &shardmgmt.ApplyJoinShardParam{
+			ShardId:    tShardId,
+			PeerOwner:  acc.Address,
+			PeerPubKey: peerPubKey[index],
+		}
+		buf := new(bytes.Buffer)
+		if err := applyJoinParam.Serialize(buf); err != nil {
+			return fmt.Errorf("failed to ser param: %s", err)
+		}
+		method := shardmgmt.APPLY_JOIN_SHARD_NAME
+		contractAddress := utils.ShardMgmtContractAddress
+		txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), acc, 0,
+			contractAddress, method, []interface{}{buf.Bytes()})
+		if err != nil {
+			return fmt.Errorf("invokeNativeContract error :", err)
+		}
+		ctx.LogInfo("apply join shard txHash is :%s", txHash.ToHexString())
 	}
-	buf := new(bytes.Buffer)
-	if err := applyJoinParam.Serialize(buf); err != nil {
-		return fmt.Errorf("failed to ser param: %s", err)
-	}
-	method := shardmgmt.APPLY_JOIN_SHARD_NAME
-	contractAddress := utils.ShardMgmtContractAddress
-	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-		contractAddress, method, []interface{}{buf.Bytes()})
-	if err != nil {
-		return fmt.Errorf("invokeNativeContract error :", err)
-	}
-	ctx.LogInfo("apply join shard txHash is :%s", txHash.ToHexString())
 	return nil
 }
 
-func ApproveJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerPubKey []string) error {
+func ApproveJoin(ctx *testframework.TestFrameworkContext, user []*sdk.Account, shardID uint64, peerPubKey []string) error {
 	tShardId, _ := types.NewShardID(shardID)
 	applyJoinParam := &shardmgmt.ApproveJoinShardParam{
 		ShardId:    tShardId,
@@ -119,8 +121,19 @@ func ApproveJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 	}
 	method := shardmgmt.APPROVE_JOIN_SHARD_NAME
 	contractAddress := utils.ShardMgmtContractAddress
-	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-		contractAddress, method, []interface{}{buf.Bytes()})
+	var txHash common.Uint256
+	var err error = nil
+	if len(user) == 1 {
+		txHash, err = ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user[0], 0,
+			contractAddress, method, []interface{}{buf.Bytes()})
+	} else {
+		pubKeys := make([]keypair.PublicKey, 0)
+		for _, u := range user {
+			pubKeys = append(pubKeys, u.PublicKey)
+		}
+		txHash, err = com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, user, 0,
+			contractAddress, method, []interface{}{buf.Bytes()})
+	}
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}

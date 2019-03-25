@@ -120,9 +120,9 @@ func TestShardConfig(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardPeerApplyJoinParam struct {
-	Path       string `json:"path"`
-	ShardId    uint64 `json:"shard_id"`
-	PeerPubKey string `json:"peer_pub_key"`
+	Path       []string `json:"path"`
+	ShardId    uint64   `json:"shard_id"`
+	PeerPubKey []string `json:"peer_pub_key"`
 }
 
 func TestShardPeerApplyJoin(ctx *testframework.TestFrameworkContext) bool {
@@ -139,13 +139,17 @@ func TestShardPeerApplyJoin(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
+	users := make([]*sdk.Account, 0)
+	for _, path := range param.Path {
+		user, ok := getAccountByPassword(ctx, path)
+		if !ok {
+			ctx.LogError("get account failed")
+			return false
+		}
+		users = append(users, user)
 	}
 
-	if err := ShardApplyJoin(ctx, user, param.ShardId, param.PeerPubKey); err != nil {
+	if err := ShardApplyJoin(ctx, param.ShardId, users, param.PeerPubKey); err != nil {
 		ctx.LogError("shard peer apply join failed: %s", err)
 		return false
 	}
@@ -155,7 +159,7 @@ func TestShardPeerApplyJoin(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardPeerApproveJoinParam struct {
-	Path       string   `json:"path"`
+	Path       []string `json:"path"`
 	ShardId    uint64   `json:"shard_id"`
 	PeerPubKey []string `json:"peer_pub_key"`
 }
@@ -174,13 +178,17 @@ func TestShardPeerApproveJoin(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
+	users := make([]*sdk.Account, 0)
+	for _, path := range param.Path {
+		user, ok := getAccountByPassword(ctx, path)
+		if !ok {
+			ctx.LogError("get account failed")
+			return false
+		}
+		users = append(users, user)
 	}
 
-	if err := ApproveJoin(ctx, user, param.ShardId, param.PeerPubKey); err != nil {
+	if err := ApproveJoin(ctx, users, param.ShardId, param.PeerPubKey); err != nil {
 		ctx.LogError("shard peer approve join failed: %s", err)
 		return false
 	}
