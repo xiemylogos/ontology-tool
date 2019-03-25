@@ -1,7 +1,7 @@
 {
-  "JsonRpcAddress":"http://localhost:20336",
-  "WalletFile":"./wallet.dat",
-  "Password":"passwordtest",
-  "GasPrice":0,
-  "GasLimit":20000
+  "JsonRpcAddress": "http://139.219.128.60:20336",
+  "WalletFile": "./wallet.dat",
+  "Password": "passwordtest",
+  "GasPrice": 0,
+  "GasLimit": 200000
 }

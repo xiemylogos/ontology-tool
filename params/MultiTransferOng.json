@@ -1,5 +1,5 @@
 {
-  "Path1": [
+  "FromPath": [
     "wallets/peer1/wallet.dat",
     "wallets/peer2/wallet.dat",
     "wallets/peer3/wallet.dat",
@@ -18,12 +18,12 @@
     "AK3YRcRvKrASQ6nTfW48Z4iMZ2sDTDRiMC"
   ],
   "Amount": [
-    10000,
-    10000,
-    10000,
-    10000,
-    10000,
-    10000,
-    10000
+    100000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000
   ]
 }

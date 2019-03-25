@@ -631,27 +631,28 @@ func multiTransfer(ctx *testframework.TestFrameworkContext, contract common.Addr
 	if err != nil {
 		ctx.LogError("invokeNativeContract error :", err)
 		return false
-		return false
 	}
 	ctx.LogInfo("multiTransfer txHash is :", txHash.ToHexString())
 	return true
 }
 
-func transferOntMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, address common.Address, amount uint64) bool {
+func transferAssetMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account,
+	to []common.Address, contractAddress common.Address, amount []uint64) bool {
 	var sts []ont.State
 	from, err := types.AddressFromMultiPubKeys(pubKeys, int((5*len(pubKeys)+6)/7))
 	if err != nil {
 		ctx.LogError("types.AddressFromMultiPubKeys error", err)
 	}
-	sts = append(sts, ont.State{
-		From:  from,
-		To:    address,
-		Value: amount,
-	})
+	for index, addr := range to {
+		sts = append(sts, ont.State{
+			From:  from,
+			To:    addr,
+			Value: amount[index],
+		})
+	}
 	transfers := ont.Transfers{
 		States: sts,
 	}
-	contractAddress := utils.OntContractAddress
 	method := "transfer"
 	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
 		contractAddress, method, []interface{}{transfers})
@@ -659,7 +660,7 @@ func transferOntMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []key
 		ctx.LogError("invokeNativeContract error :", err)
 		return false
 	}
-	ctx.LogInfo("transferOntMultiSign txHash is :", txHash.ToHexString())
+	ctx.LogInfo("transferAssetMultiSign txHash is :", txHash.ToHexString())
 	return true
 }
 
@@ -689,32 +690,6 @@ func transferOntMultiSignToMultiSign(ctx *testframework.TestFrameworkContext, pu
 	return true
 }
 
-func transferOngMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, address common.Address, amount uint64) bool {
-	var sts []ont.State
-	from, err := types.AddressFromMultiPubKeys(pubKeys, int((5*len(pubKeys)+6)/7))
-	if err != nil {
-		ctx.LogError("types.AddressFromMultiPubKeys error", err)
-	}
-	sts = append(sts, ont.State{
-		From:  from,
-		To:    address,
-		Value: amount,
-	})
-	transfers := ont.Transfers{
-		States: sts,
-	}
-	contractAddress := utils.OngContractAddress
-	method := "transfer"
-	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
-		contractAddress, method, []interface{}{transfers})
-	if err != nil {
-		ctx.LogError("invokeNativeContract error :", err)
-		return false
-	}
-	ctx.LogInfo("transferOngMultiSign txHash is :", txHash.ToHexString())
-	return true
-}
-
 func transferOngMultiSignToMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, address common.Address, amount uint64) bool {
 	var sts []ont.State
 	from, err := types.AddressFromMultiPubKeys(pubKeys, int((5*len(pubKeys)+6)/7))
@@ -741,7 +716,8 @@ func transferOngMultiSignToMultiSign(ctx *testframework.TestFrameworkContext, pu
 	return true
 }
 
-func transferFromOngMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, address common.Address, amount uint64) bool {
+func transferFromOngMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account,
+	address common.Address, amount uint64) bool {
 	from, err := types.AddressFromMultiPubKeys(pubKeys, int((5*len(pubKeys)+6)/7))
 	if err != nil {
 		ctx.LogError("types.AddressFromMultiPubKeys error", err)

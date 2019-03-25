@@ -1394,9 +1394,9 @@ func Vrf(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type TransferMultiSignParam struct {
-	Path1  []string
-	Path2  []string
-	Amount []uint64
+	Path1     []string
+	ToAddress []string
+	Amount    []uint64
 }
 
 func TransferOntMultiSign(ctx *testframework.TestFrameworkContext) bool {
@@ -1423,15 +1423,17 @@ func TransferOntMultiSign(ctx *testframework.TestFrameworkContext) bool {
 		pubKeys = append(pubKeys, user.PublicKey)
 	}
 	time.Sleep(1 * time.Second)
-	for index, path2 := range transferMultiSignParam.Path2 {
-		user2, ok := getAccountByPassword(ctx, path2)
-		if !ok {
+	toAddr := make([]common.Address, 0)
+	for _, path2 := range transferMultiSignParam.ToAddress {
+		to, err := common.AddressFromBase58(path2)
+		if err != nil {
+			ctx.LogError("parse to addr failed, err: %s", err)
 			return false
 		}
-		ok = transferOntMultiSign(ctx, pubKeys, users, user2.Address, transferMultiSignParam.Amount[index])
-		if !ok {
-			return false
-		}
+		toAddr = append(toAddr, to)
+	}
+	if !transferAssetMultiSign(ctx, pubKeys, users, toAddr, utils.OntContractAddress, transferMultiSignParam.Amount) {
+		return false
 	}
 	waitForBlock(ctx)
 	return true
@@ -1461,24 +1463,26 @@ func TransferOngMultiSign(ctx *testframework.TestFrameworkContext) bool {
 		pubKeys = append(pubKeys, user.PublicKey)
 	}
 	time.Sleep(1 * time.Second)
-	for index, path2 := range transferMultiSignParam.Path2 {
-		user2, ok := getAccountByPassword(ctx, path2)
-		if !ok {
+	toAddr := make([]common.Address, 0)
+	for _, path2 := range transferMultiSignParam.ToAddress {
+		to, err := common.AddressFromBase58(path2)
+		if err != nil {
+			ctx.LogError("parse to addr failed, err: %s", err)
 			return false
 		}
-		ok = transferOngMultiSign(ctx, pubKeys, users, user2.Address, transferMultiSignParam.Amount[index])
-		if !ok {
-			return false
-		}
+		toAddr = append(toAddr, to)
+	}
+	if !transferAssetMultiSign(ctx, pubKeys, users, toAddr, utils.OngContractAddress, transferMultiSignParam.Amount) {
+		return false
 	}
 	waitForBlock(ctx)
 	return true
 }
 
 type TransferFromMultiSignParam struct {
-	Path1  []string
-	Path2  []string
-	Amount []uint64
+	Path1     []string
+	ToAddress []string
+	Amount    []uint64
 }
 
 func TransferFromOngMultiSign(ctx *testframework.TestFrameworkContext) bool {
@@ -1505,13 +1509,13 @@ func TransferFromOngMultiSign(ctx *testframework.TestFrameworkContext) bool {
 		pubKeys = append(pubKeys, user.PublicKey)
 	}
 	time.Sleep(1 * time.Second)
-	for index, path2 := range transferFromMultiSignParam.Path2 {
-		user2, ok := getAccountByPassword(ctx, path2)
-		if !ok {
+	for index, path2 := range transferFromMultiSignParam.ToAddress {
+		to, err := common.AddressFromBase58(path2)
+		if err != nil {
+			ctx.LogError("parse to addr failed, err: %s", err)
 			return false
 		}
-		ok = transferFromOngMultiSign(ctx, pubKeys, users, user2.Address, transferFromMultiSignParam.Amount[index])
-		if !ok {
+		if !transferFromOngMultiSign(ctx, pubKeys, users, to, transferFromMultiSignParam.Amount[index]) {
 			return false
 		}
 	}
@@ -1749,16 +1753,17 @@ func TransferOntMultiSignAddress(ctx *testframework.TestFrameworkContext) bool {
 		}
 		pubKeys = append(pubKeys, k)
 	}
-	for index, address := range transferMultiSignAddressParam.Address {
-		addr, err := common.AddressFromBase58(address)
+	toAddr := make([]common.Address, 0)
+	for _, path2 := range transferMultiSignAddressParam.Address {
+		to, err := common.AddressFromBase58(path2)
 		if err != nil {
-			ctx.LogError("common.AddressFromBase58 failed %v", err)
+			ctx.LogError("parse to addr failed, err: %s", err)
 			return false
 		}
-		ok := transferOntMultiSign(ctx, pubKeys, users, addr, transferMultiSignAddressParam.Amount[index])
-		if !ok {
-			return false
-		}
+		toAddr = append(toAddr, to)
+	}
+	if !transferAssetMultiSign(ctx, pubKeys, users, toAddr, utils.OntContractAddress, transferMultiSignAddressParam.Amount) {
+		return false
 	}
 	waitForBlock(ctx)
 	return true
@@ -1797,16 +1802,17 @@ func TransferOngMultiSignAddress(ctx *testframework.TestFrameworkContext) bool {
 		}
 		pubKeys = append(pubKeys, k)
 	}
-	for index, address := range transferMultiSignAddressParam.Address {
-		addr, err := common.AddressFromBase58(address)
+	toAddr := make([]common.Address, 0)
+	for _, path2 := range transferMultiSignAddressParam.Address {
+		to, err := common.AddressFromBase58(path2)
 		if err != nil {
-			ctx.LogError("common.AddressFromBase58 failed %v", err)
+			ctx.LogError("parse to addr failed, err: %s", err)
 			return false
 		}
-		ok := transferOngMultiSign(ctx, pubKeys, users, addr, transferMultiSignAddressParam.Amount[index])
-		if !ok {
-			return false
-		}
+		toAddr = append(toAddr, to)
+	}
+	if !transferAssetMultiSign(ctx, pubKeys, users, toAddr, utils.OngContractAddress, transferMultiSignAddressParam.Amount) {
+		return false
 	}
 	waitForBlock(ctx)
 	return true
