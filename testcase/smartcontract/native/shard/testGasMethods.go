@@ -112,9 +112,10 @@ func TestShardQueryGas(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardUserWithdrawGasParam struct {
-	Path    string `json:"path"`
-	ShardID uint64 `json:"shard_id"`
-	Amount  uint64 `json:"amount"`
+	Path     string `json:"path"`
+	ShardID  uint64 `json:"shard_id"`
+	Amount   uint64 `json:"amount"`
+	ShardUrl string `json:"shard_url"`
 }
 
 func TestShardUserWithdrawGas(ctx *testframework.TestFrameworkContext) bool {
@@ -137,7 +138,7 @@ func TestShardUserWithdrawGas(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := ShardUserWithdrawGas(ctx, user, param.ShardID, param.Amount); err != nil {
+	if err := ShardUserWithdrawGas(ctx, user, param.ShardID, param.Amount, param.ShardUrl); err != nil {
 		ctx.LogError("user withdraw shard gas failed: %s", err)
 		return false
 	}
@@ -146,8 +147,9 @@ func TestShardUserWithdrawGas(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type QueryShardUserUnFinishWithdrawParam struct {
-	Path    string `json:"path"`
-	ShardID uint64 `json:"shard_id"`
+	Path     string `json:"path"`
+	ShardID  uint64 `json:"shard_id"`
+	ShardUrl string `json:"shard_url"`
 }
 
 func TestQueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext) bool {
@@ -170,7 +172,7 @@ func TestQueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext)
 		return false
 	}
 
-	if err := QueryShardUserUnFinishWithdraw(ctx, user, param.ShardID); err != nil {
+	if err := QueryShardUserUnFinishWithdraw(ctx, user, param.ShardID, param.ShardUrl); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}
@@ -182,6 +184,7 @@ type ShardRetryWithdrawParam struct {
 	Path       string `json:"path"`
 	ShardID    uint64 `json:"shard_id"`
 	WithdrawId uint64 `json:"withdraw_id"`
+	ShardUrl   string `json:"shard_url"`
 }
 
 func TestShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext) bool {
@@ -204,12 +207,18 @@ func TestShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := ShardUserRetryWithdraw(ctx, user, param.ShardID, param.WithdrawId); err != nil {
+	if err := ShardUserRetryWithdraw(ctx, user, param.ShardID, param.WithdrawId, param.ShardUrl); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}
 
 	return true
+}
+
+type ShardCommitDposParam struct {
+	Path     string `json:"path"`
+	ShardID  uint64 `json:"shard_id"`
+	ShardUrl string `json:"shard_url"`
 }
 
 func TestShardCommitDpos(ctx *testframework.TestFrameworkContext) bool {
@@ -220,7 +229,7 @@ func TestShardCommitDpos(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	param := &ShardRetryWithdrawParam{}
+	param := &ShardCommitDposParam{}
 	if err := json.Unmarshal(data, param); err != nil {
 		ctx.LogError("unmarshal param: %s", err)
 		return false
@@ -232,7 +241,7 @@ func TestShardCommitDpos(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := ShardCommitDpos(ctx, user, param.ShardID); err != nil {
+	if err := ShardCommitDpos(ctx, user, param.ShardID, param.ShardUrl); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}

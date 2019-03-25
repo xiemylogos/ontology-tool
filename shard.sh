@@ -1,8 +1,10 @@
-echo 'passwordtest' | ./main -t ShardInit
-echo 'passwordtest' | ./main -t ShardCreate
-echo 'passwordtest' | ./main -t ShardConfig
-echo 'passwordtest' | ./main -t ShardPeerApply
-echo 'passwordtest' | ./main -t ShardPeerApprove
-echo 'passwordtest' | ./main -t ShardPeerJoin
-echo 'passwordtest' | ./main -t ShardActivate
-echo 'passwordtest' | ./main -t ShardGasInit
+./main -t TransferOntMultiSign
+./main -t TransferFromOngMultiSign
+./main -t ShardInit
+./main -t ShardCreate
+./main -t ShardConfig
+./main -t ShardPeerApply
+./main -t ShardPeerApprove
+./main -t ShardPeerJoin
+./main -t ShardActivate
+./main -t ShardGasInit

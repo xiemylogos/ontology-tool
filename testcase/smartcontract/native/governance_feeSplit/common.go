@@ -29,7 +29,6 @@ import (
 	"github.com/ontio/ontology-tool/common"
 	"github.com/ontio/ontology-tool/testframework"
 	scommon "github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/common/password"
 	"github.com/ontio/ontology/consensus/vbft"
 	"github.com/ontio/ontology/consensus/vbft/config"
 	"github.com/ontio/ontology/core/types"
@@ -51,12 +50,12 @@ func getAccountByPassword(ctx *testframework.TestFrameworkContext, path string) 
 		ctx.LogError("open wallet error:%s", err)
 		return nil, false
 	}
-	pwd, err := password.GetPassword()
-	if err != nil {
-		ctx.LogError("getPassword error:%s", err)
-		return nil, false
-	}
-	user, err := wallet.GetDefaultAccount(pwd)
+	//pwd, err := password.GetPassword()
+	//if err != nil {
+	//	ctx.LogError("getPassword error:%s", err)
+	//	return nil, false
+	//}
+	user, err := wallet.GetDefaultAccount([]byte("passwordtest"))
 	if err != nil {
 		ctx.LogError("getDefaultAccount error:%s", err)
 		return nil, false

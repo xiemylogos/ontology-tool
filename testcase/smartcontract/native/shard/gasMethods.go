@@ -3,8 +3,6 @@ package shard
 import (
 	"bytes"
 	"fmt"
-	"github.com/ontio/ontology/core/chainmgr"
-
 	"github.com/ontio/ontology-crypto/keypair"
 	sdk "github.com/ontio/ontology-go-sdk"
 	com "github.com/ontio/ontology-tool/testcase/smartcontract/native/common"
@@ -72,13 +70,13 @@ func ShardQueryGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 	return nil
 }
 
-func ShardUserWithdrawGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, amount uint64) error {
+func ShardUserWithdrawGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, amount uint64, shardUrl string) error {
 	contractAddr := utils.ShardGasMgmtContractAddress
 	param := &shardgas.UserWithdrawGasParam{
 		User:   user.Address,
 		Amount: amount,
 	}
-	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(fmt.Sprintf("http://localhost:%d", chainmgr.GetShardRpcPortByShardID(shardID)))
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
 	tx, err := ctx.Ont.Native.InvokeShardNativeContract(shardID, ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
 		contractAddr, shardgas.USER_WITHDRAW_GAS_NAME, []interface{}{param})
 	if err != nil {
@@ -88,8 +86,8 @@ func ShardUserWithdrawGas(ctx *testframework.TestFrameworkContext, user *sdk.Acc
 	return nil
 }
 
-func QueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
-	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(fmt.Sprintf("http://localhost:%d", chainmgr.GetShardRpcPortByShardID(shardID)))
+func QueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, shardUrl string) error {
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
 	contractAddr := utils.ShardGasMgmtContractAddress
 	preTx, err := common.NewNativeInvokeTransaction(0, 0, contractAddr, byte(0),
 		shardgas.GET_UN_FINISH_WITHDRAW, []interface{}{user.Address})
@@ -107,8 +105,8 @@ func QueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext, use
 	return nil
 }
 
-func ShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID, withdrawId uint64) error {
-	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(fmt.Sprintf("http://localhost:%d", chainmgr.GetShardRpcPortByShardID(shardID)))
+func ShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID, withdrawId uint64, shardUrl string) error {
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
 	contractAddr := utils.ShardGasMgmtContractAddress
 	param := &shardgas.UserRetryWithdrawParam{
 		User:       user.Address,
@@ -123,9 +121,9 @@ func ShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext, user *sdk.A
 	return nil
 }
 
-func ShardCommitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
+func ShardCommitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, shardUrl string) error {
 	contractAddr := utils.ShardGasMgmtContractAddress
-	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(fmt.Sprintf("http://localhost:%d", chainmgr.GetShardRpcPortByShardID(shardID)))
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
 	tx, err := ctx.Ont.Native.InvokeShardNativeContract(shardID, ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
 		contractAddr, shardgas.SHARD_COMMIT_DPOS, []interface{}{})
 	if err != nil {

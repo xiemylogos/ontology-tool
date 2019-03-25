@@ -1,4 +1,5 @@
 {
   "path": "../ontology/wallet.dat",
-  "shard_id": 1
+  "shard_id": 1,
+  "shard_url": "http://139.219.128.60:30336"
 }

@@ -197,12 +197,16 @@ func TestShardPeerApproveJoin(ctx *testframework.TestFrameworkContext) bool {
 	return true
 }
 
-type ShardPeerJoinParam struct {
-	Path        string `json:"path"`
-	ShardID     uint64 `json:"shard_id"`
-	PeerAddress string `json:"peer_address"`
-	PeerPubKey  string `json:"peer_pub_key"`
+type JoinShardPeer struct {
+	Wallet      string `json:"wallet"`
+	IpAddress   string `json:"ip_address"`
+	PubKey      string `json:"pub_key"`
 	StakeAmount uint64 `json:"stake_amount"`
+}
+
+type ShardPeerJoinParam struct {
+	ShardId uint64           `json:"shard_id"`
+	Peers   []*JoinShardPeer `json:"peers"`
 }
 
 func TestShardPeerJoin(ctx *testframework.TestFrameworkContext) bool {
@@ -219,13 +223,17 @@ func TestShardPeerJoin(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
+	users := make([]*sdk.Account, 0)
+	for _, peer := range param.Peers {
+		user, ok := getAccountByPassword(ctx, peer.Wallet)
+		if !ok {
+			ctx.LogError("get account failed")
+			return false
+		}
+		users = append(users, user)
 	}
 
-	if err := ShardPeerJoin(ctx, user, param.ShardID, param.PeerPubKey, param.StakeAmount, param.PeerAddress); err != nil {
+	if err := ShardPeerJoin(ctx, param.ShardId, users, param.Peers); err != nil {
 		ctx.LogError("shard peer join failed: %s", err)
 		return false
 	}

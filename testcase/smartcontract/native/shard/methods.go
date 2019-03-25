@@ -33,7 +33,7 @@ func ShardInit(ctx *testframework.TestFrameworkContext, pubKeys []keypair.Public
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("shard init txHash is :%s", txHash.ToHexString())
+	ctx.LogInfo("shard init txHash is: %s", txHash.ToHexString())
 	return nil
 }
 
@@ -137,34 +137,36 @@ func ApproveJoin(ctx *testframework.TestFrameworkContext, user []*sdk.Account, s
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("apply join shard txHash is :%s", txHash.ToHexString())
+	ctx.LogInfo("approve join shard txHash is :%s", txHash.ToHexString())
 	return nil
 }
 
-func ShardPeerJoin(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, peerPubKey string,
-	stakeAmount uint64, ipAddress string) error {
+func ShardPeerJoin(ctx *testframework.TestFrameworkContext, shardID uint64, user []*sdk.Account, peers []*JoinShardPeer) error {
 	tShardId, _ := types.NewShardID(shardID)
-	param := &shardmgmt.JoinShardParam{
-		ShardID:     tShardId,
-		IpAddress:   ipAddress,
-		PeerOwner:   user.Address,
-		PeerPubKey:  peerPubKey,
-		StakeAmount: stakeAmount,
-	}
+	for index, u := range user {
+		peer := peers[index]
+		param := &shardmgmt.JoinShardParam{
+			ShardID:     tShardId,
+			IpAddress:   peer.IpAddress,
+			PeerOwner:   u.Address,
+			PeerPubKey:  peer.PubKey,
+			StakeAmount: peer.StakeAmount,
+		}
 
-	buf := new(bytes.Buffer)
-	if err := param.Serialize(buf); err != nil {
-		return fmt.Errorf("failed to ser join shard param: %s", err)
-	}
+		buf := new(bytes.Buffer)
+		if err := param.Serialize(buf); err != nil {
+			return fmt.Errorf("failed to ser join shard param: %s", err)
+		}
 
-	method := shardmgmt.JOIN_SHARD_NAME
-	contractAddress := utils.ShardMgmtContractAddress
-	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-		contractAddress, method, []interface{}{buf.Bytes()})
-	if err != nil {
-		return fmt.Errorf("invokeNativeContract error :", err)
+		method := shardmgmt.JOIN_SHARD_NAME
+		contractAddress := utils.ShardMgmtContractAddress
+		txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), u, 0,
+			contractAddress, method, []interface{}{buf.Bytes()})
+		if err != nil {
+			return fmt.Errorf("invokeNativeContract error :", err)
+		}
+		ctx.LogInfo("join shard txHash is: %s", txHash.ToHexString())
 	}
-	ctx.LogInfo("join shard txHash is :%s", txHash.ToHexString())
 	return nil
 }
 
@@ -186,7 +188,7 @@ func ShardActivate(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("activate shard txHash is :%s", txHash.ToHexString())
+	ctx.LogInfo("activate shard txHash is: %s", txHash.ToHexString())
 	return nil
 }
 
