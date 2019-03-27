@@ -68,3 +68,20 @@ func ShardUserStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, 
 	ctx.LogInfo("ShardUserStake txHash is: %s", txHash.ToHexString())
 	return nil
 }
+
+func ShardUserWithdrawOng(ctx *testframework.TestFrameworkContext, users []*sdk.Account) error {
+	for _, user := range users {
+		param := &shard_stake.WithdrawOngParam{
+			User: user.Address,
+		}
+		method := shard_stake.WITHDRAW_ONG
+		contractAddress := utils.ShardStakeAddress
+		txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+			contractAddress, method, []interface{}{param})
+		if err != nil {
+			return fmt.Errorf("invokeNativeContract error :", err)
+		}
+		ctx.LogInfo("ShardUserWithdrawOng txHash is: %s", txHash.ToHexString())
+	}
+	return nil
+}

@@ -106,3 +106,37 @@ func TestShardUserStake(ctx *testframework.TestFrameworkContext) bool {
 	waitForBlock(ctx)
 	return true
 }
+
+type UserWithdrawOngParam struct {
+	Wallets []string `json:"wallets"`
+}
+
+func TestShardUserWithdrawOng(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shard_stake/ShardUserWithdrawOng.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &UserWithdrawOngParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal shard init param: %s", err)
+		return false
+	}
+	users := make([]*sdk.Account, 0)
+	for _, peerWallet := range param.Wallets {
+		user, ok := getAccountByPassword(ctx, peerWallet)
+		if !ok {
+			ctx.LogError("get account failed")
+			return false
+		}
+		users = append(users, user)
+	}
+	if err := ShardUserWithdrawOng(ctx, users); err != nil {
+		ctx.LogError("TestShardUserWithdrawOng failed: %s", err)
+		return false
+	}
+	waitForBlock(ctx)
+	return true
+}
