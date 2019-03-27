@@ -11,7 +11,7 @@ import (
 )
 
 func TestShardGasInit(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardGasInit.json"
+	configFile := "./params/shardgas/ShardGasInit.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -50,7 +50,7 @@ type ShardDepositGasParam struct {
 }
 
 func TestShardDespoitGas(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardDepositGas.json"
+	configFile := "./params/shardgas/ShardDepositGas.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -84,7 +84,7 @@ type QueryShardGasParam struct {
 }
 
 func TestShardQueryGas(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardQueryGas.json"
+	configFile := "./params/shardgas/ShardQueryGas.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -119,7 +119,7 @@ type ShardUserWithdrawGasParam struct {
 }
 
 func TestShardUserWithdrawGas(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardUserWithdrawGas.json"
+	configFile := "./params/shardgas/ShardUserWithdrawGas.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -153,7 +153,7 @@ type QueryShardUserUnFinishWithdrawParam struct {
 }
 
 func TestQueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardUserQueryUnFinishWithdraw.json"
+	configFile := "./params/shardgas/ShardUserQueryUnFinishWithdraw.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -188,7 +188,7 @@ type ShardRetryWithdrawParam struct {
 }
 
 func TestShardUserRetryWithdraw(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardUserRetryWithdrawGas.json"
+	configFile := "./params/shardgas/ShardUserRetryWithdrawGas.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -222,7 +222,7 @@ type ShardCommitDposParam struct {
 }
 
 func TestShardCommitDpos(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardCommitDpos.json"
+	configFile := "./params/shardgas/ShardCommitDpos.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -257,7 +257,7 @@ type ShardSendPingParam struct {
 }
 
 func TestShardSendPing(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardSendPing.json"
+	configFile := "./params/shardgas/ShardSendPing.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)

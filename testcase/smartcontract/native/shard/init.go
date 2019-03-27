@@ -18,8 +18,9 @@ func TestShardMgmtContract() {
 	testframework.TFramework.RegTestCase("ShardUserWithdrawGas", TestShardUserWithdrawGas)
 	testframework.TFramework.RegTestCase("ShardQueryUnFinishWithdraw", TestQueryShardUserUnFinishWithdraw)
 	testframework.TFramework.RegTestCase("ShardRetryWithdraw", TestShardUserRetryWithdraw)
-
 	testframework.TFramework.RegTestCase("ShardCommitDpos", TestShardCommitDpos)
+
+	testframework.TFramework.RegTestCase("ShardUserStake", TestShardUserStake)
 
 	testframework.TFramework.RegTestCase("ShardSendPing", TestShardSendPing)
 	testframework.TFramework.RegTestCase("ShardHotelInit", TestShardHotelInit)

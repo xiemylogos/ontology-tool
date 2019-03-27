@@ -18,7 +18,7 @@ type ShardInitParam struct {
 }
 
 func TestShardInit(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardInit.json"
+	configFile := "./params/shardmgmt/ShardInit.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -55,7 +55,7 @@ type ShardCreateParam struct {
 }
 
 func TestShardCreate(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardCreate.json"
+	configFile := "./params/shardmgmt/ShardCreate.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -91,7 +91,7 @@ type ShardConfigParam struct {
 }
 
 func TestShardConfig(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardConfig.json"
+	configFile := "./params/shardmgmt/ShardConfig.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -126,7 +126,7 @@ type ShardPeerApplyJoinParam struct {
 }
 
 func TestShardPeerApplyJoin(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardPeerApplyJoin.json"
+	configFile := "./params/shardmgmt/ShardPeerApplyJoin.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -165,7 +165,7 @@ type ShardPeerApproveJoinParam struct {
 }
 
 func TestShardPeerApproveJoin(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardPeerApproveJoin.json"
+	configFile := "./params/shardmgmt/ShardPeerApproveJoin.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -210,7 +210,7 @@ type ShardPeerJoinParam struct {
 }
 
 func TestShardPeerJoin(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardPeerJoin.json"
+	configFile := "./params/shardmgmt/ShardPeerJoin.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -248,7 +248,7 @@ type ShardActivateParam struct {
 }
 
 func TestShardActivate(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardActivate.json"
+	configFile := "./params/shardmgmt/ShardActivate.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -281,7 +281,7 @@ type ShardQueryParam struct {
 }
 
 func TestShardInfoQuery(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/ShardInfoQuery.json"
+	configFile := "./params/shardmgmt/ShardInfoQuery.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
