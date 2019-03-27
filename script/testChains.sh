@@ -37,37 +37,37 @@ sleep 5
 
 # peer apply for shard-1
 sed -i -e 's/"shard_id".*/"shard_id": 1,/g' params/ShardPeerApplyJoin.json
-sed -i -e "s/\"peer_pub_key\".*/\"peer_pub_key\": [\"$PK\"]/g" params/ShardPeerApplyJoin.json
+sed -i -e "s/\"peer_pub_key\".[*]/\"peer_pub_key\": [\"$PK\"]/g" params/ShardPeerApplyJoin.json
 echo $PASSWD | ./main -t ShardPeerApply
 sleep 5
 
 # peer apply for shard-2
 sed -i -e 's/"shard_id".*/"shard_id": 2,/g' params/ShardPeerApplyJoin.json
-sed -i -e "s/\"peer_pub_key\".*/\"peer_pub_key\": [\"$PK\"]/g" params/ShardPeerApplyJoin.json
+sed -i -e "s/\"peer_pub_key\".[*]/\"peer_pub_key\": [\"$PK\"]/g" params/ShardPeerApplyJoin.json
 echo $PASSWD | ./main -t ShardPeerApply
 sleep 5
 
 # approve peer for shard-1
 sed -i -e 's/"shard_id".*/"shard_id": 1,/g' params/ShardPeerApproveJoin.json
-sed -i -e "s/\"peer_pub_key\".*/\"peer_pub_key\": [\"$PK\"]/g" params/ShardPeerApproveJoin.json
+sed -i -e "s/\"peer_pub_key\".[*]/\"peer_pub_key\": [\"$PK\"]/g" params/ShardPeerApproveJoin.json
 echo $PASSWD | ./main -t ShardPeerApprove
 sleep 5
 
 # approve peer for shard-2
 sed -i -e 's/"shard_id".*/"shard_id": 2,/g' params/ShardPeerApproveJoin.json
-sed -i -e "s/\"peer_pub_key\".*/\"peer_pub_key\": [\"$PK\"]/g" params/ShardPeerApproveJoin.json
+sed -i -e "s/\"peer_pub_key\".[*]/\"peer_pub_key\": [\"$PK\"]/g" params/ShardPeerApproveJoin.json
 echo $PASSWD | ./main -t ShardPeerApprove
 sleep 5
 
 # join shard-1
 sed -i -e 's/"shard_id".*/"shard_id": 1,/g' params/ShardPeerJoin.json
-sed -i -e "s/\"peer_pub_key\".*/\"peer_pub_key\": \"$PK\",/g" params/ShardPeerJoin.json
+sed -i -e "s/\"peer_pub_key\".[*]/\"peer_pub_key\": \"$PK\",/g" params/ShardPeerJoin.json
 echo $PASSWD | ./main -t ShardPeerJoin
 sleep 5
 
 # join shard-2
 sed -i -e 's/"shard_id".*/"shard_id": 2,/g' params/ShardPeerJoin.json
-sed -i -e "s/\"peer_pub_key\".*/\"peer_pub_key\": \"$PK\",/g" params/ShardPeerJoin.json
+sed -i -e "s/\"peer_pub_key\".[*]/\"peer_pub_key\": \"$PK\",/g" params/ShardPeerJoin.json
 echo $PASSWD | ./main -t ShardPeerJoin
 sleep 5
 
