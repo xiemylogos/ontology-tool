@@ -56,12 +56,16 @@ func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, par
 
 func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, networkSize uint32, vbft *config.VBFTConfig) error {
 	tShardId, _ := types.NewShardID(shardID)
+	cfgBuff := new(bytes.Buffer)
+	if err := vbft.Serialize(cfgBuff); err != nil {
+		return fmt.Errorf("serialize vbft config failed, err: %s", err)
+	}
 	param := &shardmgmt.ConfigShardParam{
 		ShardID:           tShardId,
 		NetworkMin:        networkSize,
 		StakeAssetAddress: utils.OntContractAddress,
 		GasAssetAddress:   utils.OngContractAddress,
-		VbftConfigData:    vbft,
+		VbftConfigData:    cfgBuff.Bytes(),
 	}
 	method := shardmgmt.CONFIG_SHARD_NAME
 	contractAddress := utils.ShardMgmtContractAddress
