@@ -917,10 +917,7 @@ func getPeerPoolMap(ctx *testframework.TestFrameworkContext) (*governance.PeerPo
 	peerPoolMap := &governance.PeerPoolMap{
 		PeerPoolMap: make(map[string]*governance.PeerPoolItem),
 	}
-	viewBytes, err := utils.GetUint32Bytes(view)
-	if err != nil {
-		return nil, errors.NewDetailErr(err, errors.ErrNoCode, "GetUint32Bytes, get viewBytes error!")
-	}
+	viewBytes := utils.GetUint32Bytes(view)
 	key := ConcatKey([]byte(governance.PEER_POOL), viewBytes)
 	value, err := ctx.Ont.GetStorage(contractAddress.ToHexString(), key)
 	if err != nil {

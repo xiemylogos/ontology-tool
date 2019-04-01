@@ -39,7 +39,7 @@ func ShardGasInit(ctx *testframework.TestFrameworkContext, pubKeys []keypair.Pub
 func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, amount uint64) error {
 	param := shardgas.DepositGasParam{
 		User:    user.Address,
-		ShardId: shardID,
+		ShardId: types.NewShardIDUnchecked(shardID),
 		Amount:  amount,
 	}
 	method := shardgas.DEPOSIT_GAS_NAME

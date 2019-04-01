@@ -10,7 +10,7 @@ import (
 type ShardHotelInitParam struct {
 	Path      string `json:"path"`
 	ShardID   uint64 `json:"shard_id"`
-	RoomCount int    `json:"room_count"`
+	RoomCount uint64 `json:"room_count"`
 }
 
 func TestShardHotelInit(ctx *testframework.TestFrameworkContext) bool {
@@ -82,7 +82,7 @@ func TestShardHotelQuery(ctx *testframework.TestFrameworkContext) bool {
 type ShardReserveHotelParam struct {
 	Path    string `json:"path"`
 	ShardID uint64 `json:"shard_id"`
-	RoomNo  int    `json:"room_no"`
+	RoomNo  uint64 `json:"room_no"`
 }
 
 func TestShardHotelReserve(ctx *testframework.TestFrameworkContext) bool {
@@ -117,7 +117,7 @@ func TestShardHotelReserve(ctx *testframework.TestFrameworkContext) bool {
 type ShardCheckoutHotelParam struct {
 	Path    string `json:"path"`
 	ShardID uint64 `json:"shard_id"`
-	RoomNo  int    `json:"room_no"`
+	RoomNo  uint64 `json:"room_no"`
 }
 
 func TestShardHotelCheckout(ctx *testframework.TestFrameworkContext) bool {
@@ -152,9 +152,9 @@ func TestShardHotelCheckout(ctx *testframework.TestFrameworkContext) bool {
 type ShardHotelReserve2Param struct {
 	Path          string `json:"path"`
 	ShardID       uint64 `json:"shard_id"`
-	RoomNo        int    `json:"room_no"`
+	RoomNo        uint64 `json:"room_no"`
 	ShardID2      uint64 `json:"shard_id_2"`
-	RoomNo2       int    `json:"room_no_2"`
+	RoomNo2       uint64 `json:"room_no_2"`
 	Transactional bool   `json:"transactional"`
 }
 
@@ -191,9 +191,9 @@ func TestShardHotelReserve2(ctx *testframework.TestFrameworkContext) bool {
 type ShardHotelCheckout2Param struct {
 	Path          string `json:"path"`
 	ShardID       uint64 `json:"shard_id"`
-	RoomNo        int    `json:"room_no"`
+	RoomNo        uint64 `json:"room_no"`
 	ShardID2      uint64 `json:"shard_id_2"`
-	RoomNo2       int    `json:"room_no_2"`
+	RoomNo2       uint64 `json:"room_no_2"`
 	Transactional bool   `json:"transactional"`
 }
 

@@ -6,6 +6,7 @@ import (
 	"github.com/ontio/ontology-crypto/keypair"
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
+	"github.com/ontio/ontology/core/types"
 	"github.com/ontio/ontology/smartcontract/service/native/shard_stake"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
@@ -13,10 +14,12 @@ import (
 func ShardPeerChangeMaxAuth(ctx *testframework.TestFrameworkContext, shardId uint64, peers []*sdk.Account, amount []uint64) error {
 	for index, peer := range peers {
 		param := &shard_stake.ChangeMaxAuthorizationParam{
-			ShardId:    shardId,
-			User:       peer.Address,
-			PeerPubKey: hex.EncodeToString(keypair.SerializePublicKey(peer.PublicKey)),
-			Amount:     amount[index],
+			ShardId: types.NewShardIDUnchecked(shardId),
+			User:    peer.Address,
+			Value: &shard_stake.PeerAmount{
+				PeerPubKey: hex.EncodeToString(keypair.SerializePublicKey(peer.PublicKey)),
+				Amount:     amount[index],
+			},
 		}
 		method := shard_stake.CHANGE_MAX_AUTHORIZATION
 		contractAddress := utils.ShardStakeAddress
@@ -33,10 +36,12 @@ func ShardPeerChangeMaxAuth(ctx *testframework.TestFrameworkContext, shardId uin
 func ShardPeerChangeProportion(ctx *testframework.TestFrameworkContext, shardId uint64, peers []*sdk.Account, amount []uint64) error {
 	for index, peer := range peers {
 		param := &shard_stake.ChangeProportionParam{
-			ShardId:    shardId,
-			User:       peer.Address,
-			PeerPubKey: hex.EncodeToString(keypair.SerializePublicKey(peer.PublicKey)),
-			Amount:     amount[index],
+			ShardId: types.NewShardIDUnchecked(shardId),
+			User:    peer.Address,
+			Value: &shard_stake.PeerAmount{
+				PeerPubKey: hex.EncodeToString(keypair.SerializePublicKey(peer.PublicKey)),
+				Amount:     amount[index],
+			},
 		}
 		method := shard_stake.CHANGE_PROPORTION
 		contractAddress := utils.ShardStakeAddress
@@ -53,10 +58,15 @@ func ShardPeerChangeProportion(ctx *testframework.TestFrameworkContext, shardId 
 func ShardUserStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId uint64, pubKeys []string,
 	amount []uint64) error {
 	param := &shard_stake.UserStakeParam{
-		ShardId:    shardId,
-		User:       user.Address,
-		PeerPubKey: pubKeys,
-		Amount:     amount,
+		ShardId: types.NewShardIDUnchecked(shardId),
+		User:    user.Address,
+	}
+	param.Value = make([]*shard_stake.PeerAmount, 0)
+	for index, key := range pubKeys {
+		param.Value = append(param.Value, &shard_stake.PeerAmount{
+			PeerPubKey: key,
+			Amount:     amount[index],
+		})
 	}
 	method := shard_stake.USER_STAKE
 	contractAddress := utils.ShardStakeAddress
@@ -71,13 +81,10 @@ func ShardUserStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, 
 
 func ShardUserWithdrawOng(ctx *testframework.TestFrameworkContext, users []*sdk.Account) error {
 	for _, user := range users {
-		param := &shard_stake.WithdrawOngParam{
-			User: user.Address,
-		}
 		method := shard_stake.WITHDRAW_ONG
 		contractAddress := utils.ShardStakeAddress
 		txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-			contractAddress, method, []interface{}{param})
+			contractAddress, method, []interface{}{user.Address})
 		if err != nil {
 			return fmt.Errorf("invokeNativeContract error :", err)
 		}

@@ -1,12 +1,6 @@
 {
   "Path": [
-    "wallets/peer1/wallet.dat",
-    "wallets/peer2/wallet.dat",
-    "wallets/peer3/wallet.dat",
-    "wallets/peer4/wallet.dat",
-    "wallets/peer5/wallet.dat",
-    "wallets/peer6/wallet.dat",
-    "wallets/peer7/wallet.dat"
+    "wallets/peer1/wallet.dat"
   ],
   "shard_id": 1,
   "peer_pub_key": [
