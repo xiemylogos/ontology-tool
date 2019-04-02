@@ -63,6 +63,8 @@ func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 	param := &shardmgmt.ConfigShardParam{
 		ShardID:           tShardId,
 		NetworkMin:        networkSize,
+		GasPrice:          0,
+		GasLimit:          20000,
 		StakeAssetAddress: utils.OntContractAddress,
 		GasAssetAddress:   utils.OngContractAddress,
 		VbftConfigData:    cfgBuff.Bytes(),

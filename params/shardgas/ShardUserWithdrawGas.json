@@ -1,6 +1,6 @@
 {
   "path": "wallets/peer2/wallet.dat",
   "shard_id": 1,
-  "amount": 10000,
+  "amount": 1000000000,
   "shard_url": "http://139.219.128.60:30336"
 }
