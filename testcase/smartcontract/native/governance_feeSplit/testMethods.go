@@ -824,7 +824,7 @@ func UpdateConfig(ctx *testframework.TestFrameworkContext) bool {
 		users = append(users, user)
 		pubKeys = append(pubKeys, user.PublicKey)
 	}
-	config := &governance.Configuration{
+	config := &utils.Configuration{
 		N:                    updateConfigParam.N,
 		C:                    updateConfigParam.C,
 		K:                    updateConfigParam.K,

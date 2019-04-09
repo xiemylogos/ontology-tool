@@ -101,7 +101,7 @@ func QueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext, use
 	if err != nil {
 		return fmt.Errorf("parse result failed, err: %s", err)
 	}
-	ctx.LogInfo("shard %d, address: %s, amount: %s", shardID, user.Address.ToBase58(), amount)
+	ctx.LogInfo("shard %d, amount: %s", shardID, amount)
 	return nil
 }
 

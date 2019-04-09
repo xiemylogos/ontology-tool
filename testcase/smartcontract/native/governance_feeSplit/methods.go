@@ -414,7 +414,7 @@ func whiteNodeMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypa
 	return true
 }
 
-func updateConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, config *governance.Configuration) bool {
+func updateConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, config *utils.Configuration) bool {
 	contractAddress := utils.GovernanceContractAddress
 	method := "updateConfig"
 	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, OntIDVersion,
@@ -427,7 +427,7 @@ func updateConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, co
 	return true
 }
 
-func updateConfigMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, config *governance.Configuration) bool {
+func updateConfigMultiSign(ctx *testframework.TestFrameworkContext, pubKeys []keypair.PublicKey, users []*sdk.Account, config *utils.Configuration) bool {
 	contractAddress := utils.GovernanceContractAddress
 	method := "updateConfig"
 	txHash, err := com.InvokeNativeContractWithMultiSign(ctx, ctx.GetGasPrice(), ctx.GetGasLimit(), pubKeys, users, OntIDVersion,
@@ -828,9 +828,9 @@ func regIdWithPublicKey(ctx *testframework.TestFrameworkContext, user *sdk.Accou
 	return true
 }
 
-func getVbftConfig(ctx *testframework.TestFrameworkContext) (*governance.Configuration, error) {
+func getVbftConfig(ctx *testframework.TestFrameworkContext) (*utils.Configuration, error) {
 	contractAddress := utils.GovernanceContractAddress
-	config := new(governance.Configuration)
+	config := new(utils.Configuration)
 	key := []byte(governance.VBFT_CONFIG)
 	value, err := ctx.Ont.GetStorage(contractAddress.ToHexString(), key)
 	if err != nil {
@@ -886,9 +886,9 @@ func getSplitCurve(ctx *testframework.TestFrameworkContext) (*governance.SplitCu
 	return splitCurve, nil
 }
 
-func getGovernanceView(ctx *testframework.TestFrameworkContext) (*governance.GovernanceView, error) {
+func getGovernanceView(ctx *testframework.TestFrameworkContext) (*utils.ChangeView, error) {
 	contractAddress := utils.GovernanceContractAddress
-	governanceView := new(governance.GovernanceView)
+	governanceView := new(utils.ChangeView)
 	key := []byte(governance.GOVERNANCE_VIEW)
 	value, err := ctx.Ont.GetStorage(contractAddress.ToHexString(), key)
 	if err != nil {
@@ -908,14 +908,14 @@ func getView(ctx *testframework.TestFrameworkContext) (uint32, error) {
 	return governanceView.View, nil
 }
 
-func getPeerPoolMap(ctx *testframework.TestFrameworkContext) (*governance.PeerPoolMap, error) {
+func getPeerPoolMap(ctx *testframework.TestFrameworkContext) (*utils.PeerPoolMap, error) {
 	contractAddress := utils.GovernanceContractAddress
 	view, err := getView(ctx)
 	if err != nil {
 		return nil, errors.NewDetailErr(err, errors.ErrNoCode, "getView error")
 	}
-	peerPoolMap := &governance.PeerPoolMap{
-		PeerPoolMap: make(map[string]*governance.PeerPoolItem),
+	peerPoolMap := &utils.PeerPoolMap{
+		PeerPoolMap: make(map[string]*utils.PeerPoolItem),
 	}
 	viewBytes := utils.GetUint32Bytes(view)
 	key := ConcatKey([]byte(governance.PEER_POOL), viewBytes)

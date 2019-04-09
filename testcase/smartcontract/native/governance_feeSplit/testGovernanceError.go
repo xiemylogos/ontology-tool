@@ -21,6 +21,7 @@ package governance_feeSplit
 import (
 	"github.com/ontio/ontology-tool/testframework"
 	"github.com/ontio/ontology/smartcontract/service/native/governance"
+	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
 
 const (
@@ -496,7 +497,7 @@ func SimulateUpdateConfigError(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	config := &governance.Configuration{
+	config := &utils.Configuration{
 		N:                    1,
 		C:                    2,
 		K:                    3,

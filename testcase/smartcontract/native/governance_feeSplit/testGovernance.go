@@ -1105,7 +1105,7 @@ func SimulateUpdateConfig(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	config = &governance.Configuration{
+	config = &utils.Configuration{
 		N:                    7,
 		C:                    2,
 		K:                    7,
@@ -1944,7 +1944,7 @@ func SimulateAddConsensusPeer(ctx *testframework.TestFrameworkContext) bool {
 	}
 
 	//update vbft config
-	config := &governance.Configuration{
+	config := &utils.Configuration{
 		N:                    8,
 		C:                    2,
 		K:                    8,
