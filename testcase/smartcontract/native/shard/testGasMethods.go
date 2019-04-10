@@ -79,7 +79,6 @@ func TestShardDespoitGas(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type QueryShardGasParam struct {
-	Path    string `json:"path"`
 	ShardID uint64 `json:"shard_id"`
 }
 
@@ -97,13 +96,7 @@ func TestShardQueryGas(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
-	}
-
-	if err := ShardQueryGas(ctx, user, param.ShardID); err != nil {
+	if err := ShardQueryGas(ctx, param.ShardID); err != nil {
 		ctx.LogError("shard query gas failed: %s", err)
 		return false
 	}

@@ -24,6 +24,9 @@ func TestShardMgmtContract() {
 	testframework.TFramework.RegTestCase("ShardChangePeerProportion", TestShardChangePeerProportion)
 	testframework.TFramework.RegTestCase("ShardUserWithdrawOng", TestShardUserWithdrawOng)
 	testframework.TFramework.RegTestCase("ShardUserStake", TestShardUserStake)
+	testframework.TFramework.RegTestCase("ShardQueryView", TestGetShardView)
+	testframework.TFramework.RegTestCase("ShardQueryPeerInfo", TestGetShardPeerInfo)
+	testframework.TFramework.RegTestCase("ShardQueryUserInfo", TestGetShardUserInfo)
 
 	testframework.TFramework.RegTestCase("ShardSendPing", TestShardSendPing)
 	testframework.TFramework.RegTestCase("ShardHotelInit", TestShardHotelInit)

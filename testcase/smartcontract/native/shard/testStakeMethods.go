@@ -2,6 +2,7 @@ package shard
 
 import (
 	"encoding/json"
+	"github.com/ontio/ontology/common"
 	"io/ioutil"
 
 	sdk "github.com/ontio/ontology-go-sdk"
@@ -138,5 +139,87 @@ func TestShardUserWithdrawOng(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	waitForBlock(ctx)
+	return true
+}
+
+type GetShardViewParam struct {
+	ShardId uint64 `json:"shard_id"`
+}
+
+func TestGetShardView(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shard_stake/ShardGetView.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &GetShardViewParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	if err := ShardQueryView(ctx, param.ShardId); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+	return true
+}
+
+type GetPeerInfoParam struct {
+	ShardId uint64 `json:"shard_id"`
+	View    uint64 `json:"view"`
+}
+
+func TestGetShardPeerInfo(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shard_stake/ShardGetPeerInfo.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &GetPeerInfoParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	if err := ShardQueryPeerInfo(ctx, param.ShardId, param.View); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+	return true
+}
+
+type GetUserInfoParam struct {
+	ShardId uint64 `json:"shard_id"`
+	View    uint64 `json:"view"`
+	Address string `json:"address"`
+}
+
+func TestGetShardUserInfo(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shard_stake/ShardGetUserInfo.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &GetUserInfoParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+	addr, err := common.AddressFromBase58(param.Address)
+	if err != nil {
+		ctx.LogError("decode addr failed, err: %s", err)
+		return false
+	}
+	if err := ShardQueryUserInfo(ctx, param.ShardId, param.View, addr); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
 	return true
 }

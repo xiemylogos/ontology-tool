@@ -53,10 +53,13 @@ func ShardDepositGas(ctx *testframework.TestFrameworkContext, user *sdk.Account,
 	return nil
 }
 
-func ShardQueryGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64) error {
+func ShardQueryGas(ctx *testframework.TestFrameworkContext, shardID uint64) error {
 	contractAddr := utils.ShardGasMgmtContractAddress
 	preTx, err := common.NewNativeInvokeTransaction(0, 0, contractAddr, byte(0),
 		shardgas.GET_SHARD_GAS_BALANCE_NAME, []interface{}{shardID})
+	if err != nil {
+		return fmt.Errorf("ShardQueryGas: build tx failed, err: %s", err)
+	}
 	preTx.ShardID = shardID
 	value, err := ctx.Ont.PreExecTransaction(preTx)
 	if err != nil {
@@ -66,7 +69,7 @@ func ShardQueryGas(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 	if err != nil {
 		return errors.NewDetailErr(err, errors.ErrNoCode, "parse ong amount")
 	}
-	ctx.LogInfo("shard %d, address: %s, amount: %d", shardID, user.Address.ToBase58(), amount)
+	ctx.LogInfo("shard %d, amount: %d", shardID, amount)
 	return nil
 }
 
