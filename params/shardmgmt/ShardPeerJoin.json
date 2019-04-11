@@ -3,43 +3,43 @@
   "peers": [
     {
       "wallet": "wallets/peer1/wallet.dat",
-      "ip_address": "139.219.128.220:30338",
+      "ip_address": "172.168.3.37:30338",
       "pub_key": "0253ccfd439b29eca0fe90ca7c6eaa1f98572a054aa2d1d56e72ad96c466107a85",
       "stake_amount": 10000
     },
     {
       "wallet": "wallets/peer2/wallet.dat",
-      "ip_address": "139.219.128.60:30338",
+      "ip_address": "172.168.3.38:30338",
       "pub_key": "035eb654bad6c6409894b9b42289a43614874c7984bde6b03aaf6fc1d0486d9d45",
       "stake_amount": 10000
     },
     {
       "wallet": "wallets/peer3/wallet.dat",
-      "ip_address": "139.219.140.55:30338",
+      "ip_address": "172.168.3.39:30338",
       "pub_key": "0281d198c0dd3737a9c39191bc2d1af7d65a44261a8a64d6ef74d63f27cfb5ed92",
       "stake_amount": 10000
     },
     {
       "wallet": "wallets/peer4/wallet.dat",
-      "ip_address": "139.219.135.199:30338",
+      "ip_address": "172.168.3.40:30338",
       "pub_key": "023967bba3060bf8ade06d9bad45d02853f6c623e4d4f52d767eb56df4d364a99f",
       "stake_amount": 10000
     },
     {
       "wallet": "wallets/peer5/wallet.dat",
-      "ip_address": "139.219.128.189:30338",
+      "ip_address": "172.168.3.41:30338",
       "pub_key": "038bfc50b0e3f0e5df6d451069065cbfa7ab5d382a5839cce82e0c963edb026e94",
       "stake_amount": 10000
     },
     {
       "wallet": "wallets/peer6/wallet.dat",
-      "ip_address": "139.219.131.158:30338",
+      "ip_address": "172.168.3.42:30338",
       "pub_key": "03f1095289e7fddb882f1cb3e158acc1c30d9de606af21c97ba851821e8b6ea535",
       "stake_amount": 10000
     },
     {
       "wallet": "wallets/peer7/wallet.dat",
-      "ip_address": "139.219.131.23:30338",
+      "ip_address": "172.168.3.43:30338",
       "pub_key": "0215865baab70607f4a2413a7a9ba95ab2c3c0202d5b7731c6824eef48e899fc90",
       "stake_amount": 10000
     }

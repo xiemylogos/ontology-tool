@@ -94,6 +94,9 @@ func QueryShardUserUnFinishWithdraw(ctx *testframework.TestFrameworkContext, use
 	contractAddr := utils.ShardGasMgmtContractAddress
 	preTx, err := common.NewNativeInvokeTransaction(0, 0, contractAddr, byte(0),
 		shardgas.GET_UN_FINISH_WITHDRAW, []interface{}{user.Address})
+	if err != nil {
+		return fmt.Errorf("QueryShardUserUnFinishWithdraw: build tx failed, err: %s", err)
+	}
 	preTx.Version = 1
 	preTx.ShardID = shardID
 	value, err := ctx.Ont.PreExecTransaction(preTx)
