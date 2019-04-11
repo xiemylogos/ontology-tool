@@ -165,3 +165,45 @@ func ShardQueryUserInfo(ctx *testframework.TestFrameworkContext, shardID, view u
 	ctx.LogInfo("shard %d, info: %s", shardID, info)
 	return nil
 }
+
+func ShardAddInitPos(ctx *testframework.TestFrameworkContext, shardID types.ShardID, owner *sdk.Account, peer string,
+	amount uint64) error {
+	param := &shard_stake.PeerStakeParam{
+		ShardId:   shardID,
+		PeerOwner: owner.Address,
+		Value: &shard_stake.PeerAmount{
+			PeerPubKey: peer,
+			Amount:     amount,
+		},
+	}
+	method := shard_stake.ADD_INIT_DOS
+	contractAddress := utils.ShardStakeAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), owner, 0,
+		contractAddress, method, []interface{}{param})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("txHash is: %s", txHash.ToHexString())
+	return nil
+}
+
+func ShardReduceInitPos(ctx *testframework.TestFrameworkContext, shardID types.ShardID, owner *sdk.Account, peer string,
+	amount uint64) error {
+	param := &shard_stake.PeerStakeParam{
+		ShardId:   shardID,
+		PeerOwner: owner.Address,
+		Value: &shard_stake.PeerAmount{
+			PeerPubKey: peer,
+			Amount:     amount,
+		},
+	}
+	method := shard_stake.REDUCE_INIT_POS
+	contractAddress := utils.ShardStakeAddress
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), owner, 0,
+		contractAddress, method, []interface{}{param})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("txHash is: %s", txHash.ToHexString())
+	return nil
+}

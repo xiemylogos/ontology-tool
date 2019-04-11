@@ -3,6 +3,7 @@ package shard
 import (
 	"encoding/json"
 	"github.com/ontio/ontology/common"
+	"github.com/ontio/ontology/core/types"
 	"io/ioutil"
 
 	sdk "github.com/ontio/ontology-go-sdk"
@@ -218,6 +219,61 @@ func TestGetShardUserInfo(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	if err := ShardQueryUserInfo(ctx, param.ShardId, param.View, addr); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+	return true
+}
+
+type ChangeInitPosParam struct {
+	Wallet  string        `json:"wallet"`
+	ShardId types.ShardID `json:"shard_id"`
+	Peer    string        `json:"peer"`
+	Amount  uint64        `json:"amount"`
+}
+
+func TestAddInitPos(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shard_stake/ShardAddInitPos.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ChangeInitPosParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+	user, ok := getAccountByPassword(ctx, param.Wallet)
+	if !ok {
+		return false
+	}
+	if err := ShardAddInitPos(ctx, param.ShardId, user, param.Peer, param.Amount); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+	return true
+}
+
+func TestReduceInitPos(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shard_stake/ShardReduceInitPos.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ChangeInitPosParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+	user, ok := getAccountByPassword(ctx, param.Wallet)
+	if !ok {
+		return false
+	}
+	if err := ShardReduceInitPos(ctx, param.ShardId, user, param.Peer, param.Amount); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}
