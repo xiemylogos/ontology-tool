@@ -1,4 +1,4 @@
 {
-   "Path": "wallets/peer1/wallet.dat",
+   "Path":  "../ontology/wallet.dat",
    "parent_shard_id": 0
 }

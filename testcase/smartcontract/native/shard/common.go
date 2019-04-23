@@ -18,7 +18,7 @@ func getAccountByPassword(ctx *testframework.TestFrameworkContext, path string) 
 	//	ctx.LogError("getPassword error:%s", err)
 	//	return nil, false
 	//}
-	user, err := wallet.GetDefaultAccount([]byte("passwordtest"))
+	user, err := wallet.GetDefaultAccount([]byte("123"))
 	if err != nil {
 		ctx.LogError("getDefaultAccount error:%s", err)
 		return nil, false
