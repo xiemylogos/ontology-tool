@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/ontio/ontology/core/types"
+	"github.com/ontio/ontology/common"
 	"io/ioutil"
 	"time"
 
@@ -51,8 +51,8 @@ func TestShardInit(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardCreateParam struct {
-	Path          string        `json:"path"`
-	ParentShardID types.ShardID `json:"parent_shard_id"`
+	Path          string         `json:"path"`
+	ParentShardID common.ShardID `json:"parent_shard_id"`
 }
 
 func TestShardCreate(ctx *testframework.TestFrameworkContext) bool {
@@ -86,7 +86,7 @@ func TestShardCreate(ctx *testframework.TestFrameworkContext) bool {
 
 type ShardConfigParam struct {
 	Path        string             `json:"path"`
-	ShardID     types.ShardID      `json:"shard_id"`
+	ShardID     common.ShardID     `json:"shard_id"`
 	NetworkSize uint32             `json:"network_size"`
 	VbftConfig  *config.VBFTConfig `json:"vbft"`
 }
@@ -121,9 +121,9 @@ func TestShardConfig(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardPeerApplyJoinParam struct {
-	Path       []string      `json:"path"`
-	ShardId    types.ShardID `json:"shard_id"`
-	PeerPubKey []string      `json:"peer_pub_key"`
+	Path       []string       `json:"path"`
+	ShardId    common.ShardID `json:"shard_id"`
+	PeerPubKey []string       `json:"peer_pub_key"`
 }
 
 func TestShardPeerApplyJoin(ctx *testframework.TestFrameworkContext) bool {
@@ -160,9 +160,9 @@ func TestShardPeerApplyJoin(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardPeerApproveJoinParam struct {
-	Path       []string      `json:"path"`
-	ShardId    types.ShardID `json:"shard_id"`
-	PeerPubKey []string      `json:"peer_pub_key"`
+	Path       []string       `json:"path"`
+	ShardId    common.ShardID `json:"shard_id"`
+	PeerPubKey []string       `json:"peer_pub_key"`
 }
 
 func TestShardPeerApproveJoin(ctx *testframework.TestFrameworkContext) bool {
@@ -206,7 +206,7 @@ type JoinShardPeer struct {
 }
 
 type ShardPeerJoinParam struct {
-	ShardId types.ShardID    `json:"shard_id"`
+	ShardId common.ShardID   `json:"shard_id"`
 	Peers   []*JoinShardPeer `json:"peers"`
 }
 
@@ -244,8 +244,8 @@ func TestShardPeerJoin(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardActivateParam struct {
-	Path    string        `json:"path"`
-	ShardID types.ShardID `json:"shard_id"`
+	Path    string         `json:"path"`
+	ShardID common.ShardID `json:"shard_id"`
 }
 
 func TestShardActivate(ctx *testframework.TestFrameworkContext) bool {
@@ -278,9 +278,9 @@ func TestShardActivate(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardPeerExitParam struct {
-	ShardId types.ShardID `json:"shard_id"`
-	Wallet  string        `json:"wallet"`
-	Peer    string        `json:"peer"`
+	ShardId common.ShardID `json:"shard_id"`
+	Wallet  string         `json:"wallet"`
+	Peer    string         `json:"peer"`
 }
 
 func TestShardPeerExit(ctx *testframework.TestFrameworkContext) bool {
@@ -313,7 +313,7 @@ func TestShardPeerExit(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ShardQueryParam struct {
-	ShardID types.ShardID `json:"shard_id"`
+	ShardID common.ShardID `json:"shard_id"`
 }
 
 func TestShardInfoQuery(ctx *testframework.TestFrameworkContext) bool {

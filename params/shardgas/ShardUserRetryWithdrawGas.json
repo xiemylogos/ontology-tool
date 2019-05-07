@@ -1,6 +1,0 @@
-{
-  "path": "wallets/peer2/wallet.dat",
-  "shard_id": 1,
-  "withdraw_id": 1,
-  "shard_url": "http://localhost:30336"
-}

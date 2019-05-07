@@ -7,7 +7,6 @@ import (
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/core/types"
 	"github.com/ontio/ontology/smartcontract/service/native/shardhotel"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
@@ -88,7 +87,7 @@ func ShardQueryRoom(ctx *testframework.TestFrameworkContext, user *sdk.Account, 
 
 func ShardHotelReserve2(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, roomNo uint64,
 	shardID2 uint64, roomNo2 uint64, transactional bool) error {
-	shardId2, err := types.NewShardID(shardID2)
+	shardId2, err := common.NewShardID(shardID2)
 	if err != nil {
 		return fmt.Errorf("invalid shard id2: %d", shardID2)
 	}
@@ -118,7 +117,7 @@ func ShardHotelReserve2(ctx *testframework.TestFrameworkContext, user *sdk.Accou
 
 func ShardHotelCheckout2(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID uint64, roomNo uint64,
 	shardID2 uint64, roomNo2 uint64, transactional bool) error {
-	shardId2, err := types.NewShardID(shardID2)
+	shardId2, err := common.NewShardID(shardID2)
 	if err != nil {
 		return fmt.Errorf("invalid shard id2: %d", shardID2)
 	}

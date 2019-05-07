@@ -8,14 +8,13 @@ import (
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/core/types"
 	"github.com/ontio/ontology/errors"
 	bComm "github.com/ontio/ontology/http/base/common"
 	"github.com/ontio/ontology/smartcontract/service/native/shard_stake"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
 )
 
-func ShardPeerChangeMaxAuth(ctx *testframework.TestFrameworkContext, shardId types.ShardID, peers []*sdk.Account,
+func ShardPeerChangeMaxAuth(ctx *testframework.TestFrameworkContext, shardId common.ShardID, peers []*sdk.Account,
 	amount []uint64) error {
 	for index, peer := range peers {
 		param := &shard_stake.ChangeMaxAuthorizationParam{
@@ -38,7 +37,7 @@ func ShardPeerChangeMaxAuth(ctx *testframework.TestFrameworkContext, shardId typ
 	return nil
 }
 
-func ShardPeerChangeProportion(ctx *testframework.TestFrameworkContext, shardId types.ShardID, peers []*sdk.Account, amount []uint64) error {
+func ShardPeerChangeProportion(ctx *testframework.TestFrameworkContext, shardId common.ShardID, peers []*sdk.Account, amount []uint64) error {
 	for index, peer := range peers {
 		param := &shard_stake.ChangeProportionParam{
 			ShardId: shardId,
@@ -60,7 +59,7 @@ func ShardPeerChangeProportion(ctx *testframework.TestFrameworkContext, shardId 
 	return nil
 }
 
-func ShardUserStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId types.ShardID, pubKeys []string,
+func ShardUserStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId common.ShardID, pubKeys []string,
 	amount []uint64) error {
 	param := &shard_stake.UserStakeParam{
 		ShardId: shardId,
@@ -84,7 +83,7 @@ func ShardUserStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, 
 	return nil
 }
 
-func ShardUserUnfreezeStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId types.ShardID, pubKeys []string,
+func ShardUserUnfreezeStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId common.ShardID, pubKeys []string,
 	amount []uint64) error {
 	param := &shard_stake.UserStakeParam{
 		ShardId: shardId,
@@ -108,7 +107,7 @@ func ShardUserUnfreezeStake(ctx *testframework.TestFrameworkContext, user *sdk.A
 	return nil
 }
 
-func ShardUserWithdrawStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId types.ShardID) error {
+func ShardUserWithdrawStake(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId common.ShardID) error {
 	param := &shard_stake.WithdrawStakeAssetParam{
 		ShardId: shardId,
 		User:    user.Address,
@@ -124,7 +123,7 @@ func ShardUserWithdrawStake(ctx *testframework.TestFrameworkContext, user *sdk.A
 	return nil
 }
 
-func ShardUserWithdrawFee(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId types.ShardID) error {
+func ShardUserWithdrawFee(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId common.ShardID) error {
 	param := &shard_stake.WithdrawFeeParam{
 		ShardId: shardId,
 		User:    user.Address,
@@ -154,7 +153,7 @@ func ShardUserWithdrawOng(ctx *testframework.TestFrameworkContext, users []*sdk.
 	return nil
 }
 
-func ShardQueryView(ctx *testframework.TestFrameworkContext, shardID types.ShardID) error {
+func ShardQueryView(ctx *testframework.TestFrameworkContext, shardID common.ShardID) error {
 	contractAddr := utils.ShardStakeAddress
 	preTx, err := bComm.NewNativeInvokeTransaction(0, 0, contractAddr, byte(0),
 		shard_stake.GET_CURRENT_VIEW, []interface{}{shardID})
@@ -174,7 +173,7 @@ func ShardQueryView(ctx *testframework.TestFrameworkContext, shardID types.Shard
 	return nil
 }
 
-func ShardQueryPeerInfo(ctx *testframework.TestFrameworkContext, shardID types.ShardID, view uint64) error {
+func ShardQueryPeerInfo(ctx *testframework.TestFrameworkContext, shardID common.ShardID, view uint64) error {
 	contractAddr := utils.ShardStakeAddress
 	param := &shard_stake.GetPeerInfoParam{
 		ShardId: shardID,
@@ -198,7 +197,7 @@ func ShardQueryPeerInfo(ctx *testframework.TestFrameworkContext, shardID types.S
 	return nil
 }
 
-func ShardQueryUserInfo(ctx *testframework.TestFrameworkContext, shardID types.ShardID, view uint64, user common.Address) error {
+func ShardQueryUserInfo(ctx *testframework.TestFrameworkContext, shardID common.ShardID, view uint64, user common.Address) error {
 	contractAddr := utils.ShardStakeAddress
 	param := &shard_stake.GetUserStakeInfoParam{
 		ShardId: shardID,
@@ -223,7 +222,7 @@ func ShardQueryUserInfo(ctx *testframework.TestFrameworkContext, shardID types.S
 	return nil
 }
 
-func ShardAddInitPos(ctx *testframework.TestFrameworkContext, shardID types.ShardID, owner *sdk.Account, peer string,
+func ShardAddInitPos(ctx *testframework.TestFrameworkContext, shardID common.ShardID, owner *sdk.Account, peer string,
 	amount uint64) error {
 	param := &shard_stake.PeerStakeParam{
 		ShardId:   shardID,
@@ -244,7 +243,7 @@ func ShardAddInitPos(ctx *testframework.TestFrameworkContext, shardID types.Shar
 	return nil
 }
 
-func ShardReduceInitPos(ctx *testframework.TestFrameworkContext, shardID types.ShardID, owner *sdk.Account, peer string,
+func ShardReduceInitPos(ctx *testframework.TestFrameworkContext, shardID common.ShardID, owner *sdk.Account, peer string,
 	amount uint64) error {
 	param := &shard_stake.PeerStakeParam{
 		ShardId:   shardID,

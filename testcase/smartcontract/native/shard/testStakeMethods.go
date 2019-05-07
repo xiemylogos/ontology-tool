@@ -3,7 +3,6 @@ package shard
 import (
 	"encoding/json"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/core/types"
 	"io/ioutil"
 
 	sdk "github.com/ontio/ontology-go-sdk"
@@ -11,9 +10,9 @@ import (
 )
 
 type ChangePeerAttrParam struct {
-	ShardId     types.ShardID `json:"shard_id"`
-	PeerWallets []string      `json:"peer_wallets"`
-	Amount      []uint64      `json:"amount"`
+	ShardId     common.ShardID `json:"shard_id"`
+	PeerWallets []string       `json:"peer_wallets"`
+	Amount      []uint64       `json:"amount"`
 }
 
 func TestShardChangePeerMaxAuthorization(ctx *testframework.TestFrameworkContext) bool {
@@ -77,10 +76,10 @@ func TestShardChangePeerProportion(ctx *testframework.TestFrameworkContext) bool
 }
 
 type UserStakeParam struct {
-	Path       string        `json:"path"`
-	ShardId    types.ShardID `json:"shard_id"`
-	PeerPubKey []string      `json:"peer_pub_key"`
-	Amount     []uint64      `json:"amount"`
+	Path       string         `json:"path"`
+	ShardId    common.ShardID `json:"shard_id"`
+	PeerPubKey []string       `json:"peer_pub_key"`
+	Amount     []uint64       `json:"amount"`
 }
 
 func TestShardUserStake(ctx *testframework.TestFrameworkContext) bool {
@@ -136,8 +135,8 @@ func TestShardUserUnfreezeStake(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type UserWithdrawStakeParam struct {
-	Path    string        `json:"path"`
-	ShardId types.ShardID `json:"shard_id"`
+	Path    string         `json:"path"`
+	ShardId common.ShardID `json:"shard_id"`
 }
 
 func TestShardUserWithdrawStake(ctx *testframework.TestFrameworkContext) bool {
@@ -227,7 +226,7 @@ func TestShardUserWithdrawOng(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type GetShardViewParam struct {
-	ShardId types.ShardID `json:"shard_id"`
+	ShardId common.ShardID `json:"shard_id"`
 }
 
 func TestGetShardView(ctx *testframework.TestFrameworkContext) bool {
@@ -252,8 +251,8 @@ func TestGetShardView(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type GetPeerInfoParam struct {
-	ShardId types.ShardID `json:"shard_id"`
-	View    uint64        `json:"view"`
+	ShardId common.ShardID `json:"shard_id"`
+	View    uint64         `json:"view"`
 }
 
 func TestGetShardPeerInfo(ctx *testframework.TestFrameworkContext) bool {
@@ -278,9 +277,9 @@ func TestGetShardPeerInfo(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type GetUserInfoParam struct {
-	ShardId types.ShardID `json:"shard_id"`
-	View    uint64        `json:"view"`
-	Address string        `json:"address"`
+	ShardId common.ShardID `json:"shard_id"`
+	View    uint64         `json:"view"`
+	Address string         `json:"address"`
 }
 
 func TestGetShardUserInfo(ctx *testframework.TestFrameworkContext) bool {
@@ -309,10 +308,10 @@ func TestGetShardUserInfo(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type ChangeInitPosParam struct {
-	Wallet  string        `json:"wallet"`
-	ShardId types.ShardID `json:"shard_id"`
-	Peer    string        `json:"peer"`
-	Amount  uint64        `json:"amount"`
+	Wallet  string         `json:"wallet"`
+	ShardId common.ShardID `json:"shard_id"`
+	Peer    string         `json:"peer"`
+	Amount  uint64         `json:"amount"`
 }
 
 func TestAddInitPos(ctx *testframework.TestFrameworkContext) bool {

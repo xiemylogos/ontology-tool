@@ -5,12 +5,10 @@ import (
 	"fmt"
 
 	"github.com/ontio/ontology-crypto/keypair"
-	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/core/types"
-
 	sdk "github.com/ontio/ontology-go-sdk"
 	com "github.com/ontio/ontology-tool/testcase/smartcontract/native/common"
 	"github.com/ontio/ontology-tool/testframework"
+	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/config"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt"
 	"github.com/ontio/ontology/smartcontract/service/native/shardmgmt/states"
@@ -36,7 +34,7 @@ func ShardInit(ctx *testframework.TestFrameworkContext, pubKeys []keypair.Public
 	return nil
 }
 
-func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, parentID types.ShardID) error {
+func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, parentID common.ShardID) error {
 	param := &shardmgmt.CreateShardParam{
 		ParentShardID: parentID,
 		Creator:       user.Address,
@@ -49,11 +47,11 @@ func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, par
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("shard create txHash is :%s", txHash.ToHexString())
+	ctx.LogInfo("shard create txHash is: %s", txHash.ToHexString())
 	return nil
 }
 
-func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID types.ShardID, networkSize uint32,
+func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID common.ShardID, networkSize uint32,
 	vbft *config.VBFTConfig) error {
 	cfgBuff := new(bytes.Buffer)
 	if err := vbft.Serialize(cfgBuff); err != nil {
@@ -75,11 +73,11 @@ func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, sha
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("shard config txHash is :%s", txHash.ToHexString())
+	ctx.LogInfo("shard config txHash is: %s", txHash.ToHexString())
 	return nil
 }
 
-func ShardApplyJoin(ctx *testframework.TestFrameworkContext, shardID types.ShardID, user []*sdk.Account, peerPubKey []string) error {
+func ShardApplyJoin(ctx *testframework.TestFrameworkContext, shardID common.ShardID, user []*sdk.Account, peerPubKey []string) error {
 	for index, acc := range user {
 		applyJoinParam := &shardmgmt.ApplyJoinShardParam{
 			ShardId:    shardID,
@@ -93,12 +91,12 @@ func ShardApplyJoin(ctx *testframework.TestFrameworkContext, shardID types.Shard
 		if err != nil {
 			return fmt.Errorf("invokeNativeContract error :", err)
 		}
-		ctx.LogInfo("apply join shard txHash is :%s", txHash.ToHexString())
+		ctx.LogInfo("apply join shard txHash is: %s", txHash.ToHexString())
 	}
 	return nil
 }
 
-func ApproveJoin(ctx *testframework.TestFrameworkContext, user []*sdk.Account, shardID types.ShardID, peerPubKey []string) error {
+func ApproveJoin(ctx *testframework.TestFrameworkContext, user []*sdk.Account, shardID common.ShardID, peerPubKey []string) error {
 	applyJoinParam := &shardmgmt.ApproveJoinShardParam{
 		ShardId:    shardID,
 		PeerPubKey: peerPubKey,
@@ -121,11 +119,11 @@ func ApproveJoin(ctx *testframework.TestFrameworkContext, user []*sdk.Account, s
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
-	ctx.LogInfo("approve join shard txHash is :%s", txHash.ToHexString())
+	ctx.LogInfo("approve join shard txHash is: %s", txHash.ToHexString())
 	return nil
 }
 
-func ShardPeerJoin(ctx *testframework.TestFrameworkContext, shardID types.ShardID, user []*sdk.Account, peers []*JoinShardPeer) error {
+func ShardPeerJoin(ctx *testframework.TestFrameworkContext, shardID common.ShardID, user []*sdk.Account, peers []*JoinShardPeer) error {
 	for index, u := range user {
 		peer := peers[index]
 		param := &shardmgmt.JoinShardParam{
@@ -148,7 +146,7 @@ func ShardPeerJoin(ctx *testframework.TestFrameworkContext, shardID types.ShardI
 	return nil
 }
 
-func ShardActivate(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID types.ShardID) error {
+func ShardActivate(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID common.ShardID) error {
 	param := &shardmgmt.ActivateShardParam{
 		ShardID: shardID,
 	}
@@ -164,7 +162,7 @@ func ShardActivate(ctx *testframework.TestFrameworkContext, user *sdk.Account, s
 	return nil
 }
 
-func ShardPeerExit(ctx *testframework.TestFrameworkContext, owner *sdk.Account, shardID types.ShardID, peer string) error {
+func ShardPeerExit(ctx *testframework.TestFrameworkContext, owner *sdk.Account, shardID common.ShardID, peer string) error {
 	param := shardmgmt.ExitShardParam{
 		ShardId:    shardID,
 		PeerOwner:  owner.Address,
@@ -181,7 +179,7 @@ func ShardPeerExit(ctx *testframework.TestFrameworkContext, owner *sdk.Account, 
 	return nil
 }
 
-func ShardStateQuery(ctx *testframework.TestFrameworkContext, shardID types.ShardID) (*shardstates.ShardState, error) {
+func ShardStateQuery(ctx *testframework.TestFrameworkContext, shardID common.ShardID) (*shardstates.ShardState, error) {
 	globalStateValue, err := ctx.Ont.GetStorage(utils.ShardMgmtContractAddress.ToHexString(), []byte(shardmgmt.KEY_GLOBAL_STATE))
 	if err != nil {
 		return nil, fmt.Errorf("shardQeury, get global storage: %s", err)

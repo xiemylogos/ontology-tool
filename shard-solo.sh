@@ -1,5 +1,3 @@
-./main -t TransferOntMultiSign
-./main -t TransferFromOngMultiSign
 ./main -t ShardInit
 ./main -t ShardCreate
 ./main -t ShardConfig
@@ -7,3 +5,4 @@
 ./main -t ShardPeerApprove
 ./main -t ShardPeerJoin
 ./main -t ShardActivate
+./main -t ShardAssetInit
