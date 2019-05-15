@@ -448,6 +448,7 @@ func TestShardRetryCommitDpos(ctx *testframework.TestFrameworkContext) bool {
 
 type GetShardCommitDposInfoParam struct {
 	ShardUrl string
+	ShardId common.ShardID
 }
 
 func TestGetShardCommitDposInfo(ctx *testframework.TestFrameworkContext) bool {
@@ -463,7 +464,7 @@ func TestGetShardCommitDposInfo(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("unmarshal param: %s", err)
 		return false
 	}
-	if err := GetShardCommitDposInfo(ctx, param.ShardUrl); err != nil {
+	if err := GetShardCommitDposInfo(ctx, param.ShardUrl, param.ShardId); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}

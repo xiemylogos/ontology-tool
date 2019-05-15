@@ -244,11 +244,11 @@ func ShardRetryCommitDpos(ctx *testframework.TestFrameworkContext, shardId commo
 	return nil
 }
 
-func GetShardCommitDposInfo(ctx *testframework.TestFrameworkContext, shardUrl string) error {
+func GetShardCommitDposInfo(ctx *testframework.TestFrameworkContext, shardUrl string, shardId common.ShardID) error {
 	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
 	method := shardmgmt.GET_SHARD_COMMIT_DPOS_INFO
 	contractAddress := utils.ShardMgmtContractAddress
-	value, err := ctx.Ont.Native.PreExecInvokeShardNativeContract(contractAddress, byte(0), method, 0,
+	value, err := ctx.Ont.Native.PreExecInvokeShardNativeContract(contractAddress, byte(0), method, shardId.ToUint64(),
 		[]interface{}{})
 	if err != nil {
 		return fmt.Errorf("pre-execute err: %s", err)

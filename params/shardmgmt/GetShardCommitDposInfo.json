@@ -1,3 +1,4 @@
 {
-  "ShardUrl": "http://localhost:30336"
+  "ShardUrl": "http://localhost:30336",
+  "ShardId": 1
 }
