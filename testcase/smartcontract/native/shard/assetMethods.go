@@ -22,37 +22,45 @@ func AssetInit(ctx *testframework.TestFrameworkContext, user *sdk.Account) error
 	return nil
 }
 
-func XShardTransfer(ctx *testframework.TestFrameworkContext, user *sdk.Account, contractAddress, to common.Address,
-	amount uint64, toShard common.ShardID, shardUrl, method string) error {
-	param := &oep4.XShardTransferParam{
-		From:    user.Address,
-		To:      to,
-		ToShard: toShard,
-		Amount:  new(big.Int).SetUint64(amount),
-	}
+func XShardTransfer(ctx *testframework.TestFrameworkContext, users []*sdk.Account, contractAddress common.Address,
+	to []common.Address, amount []uint64, toShard common.ShardID, shardUrl, method string) error {
 	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
-	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-		contractAddress, method, []interface{}{param})
-	if err != nil {
-		return fmt.Errorf("invokeNativeContract error :", err)
+	for i, user := range users {
+		toAddr := to[i]
+		num := amount[i]
+		param := &oep4.XShardTransferParam{
+			From:    user.Address,
+			To:      toAddr,
+			ToShard: toShard,
+			Amount:  new(big.Int).SetUint64(num),
+		}
+		txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+			contractAddress, method, []interface{}{param})
+		if err != nil {
+			return fmt.Errorf("invokeNativeContract error :", err)
+		}
+		ctx.LogInfo("txHash is: %s", txHash.ToHexString())
 	}
-	ctx.LogInfo("txHash is: %s", txHash.ToHexString())
+
 	return nil
 }
 
-func XShardTransferRetry(ctx *testframework.TestFrameworkContext, user *sdk.Account, contractAddress common.Address,
-	transferId uint64, shardUrl, method string) error {
-	param := &oep4.XShardTransferRetryParam{
-		From:       user.Address,
-		TransferId: new(big.Int).SetUint64(transferId),
-	}
+func XShardTransferRetry(ctx *testframework.TestFrameworkContext, users []*sdk.Account, contractAddress common.Address,
+	transferId []uint64, shardUrl, method string) error {
 	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
-	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-		contractAddress, method, []interface{}{param})
-	if err != nil {
-		return fmt.Errorf("invokeNativeContract error :", err)
+	for i, user := range users {
+		id := transferId[i]
+		param := &oep4.XShardTransferRetryParam{
+			From:       user.Address,
+			TransferId: new(big.Int).SetUint64(id),
+		}
+		txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+			contractAddress, method, []interface{}{param})
+		if err != nil {
+			return fmt.Errorf("invokeNativeContract error :", err)
+		}
+		ctx.LogInfo("txHash is: %s", txHash.ToHexString())
 	}
-	ctx.LogInfo("txHash is: %s", txHash.ToHexString())
 	return nil
 }
 

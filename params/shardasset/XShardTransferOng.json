@@ -1,7 +1,13 @@
 {
-  "Path": "../ontology/wallet.dat",
-  "To": "AZonXUcUgzWb2KYdSiLapgqCMEfWGCDTw5",
-  "Amount": 1000000000,
+  "Path": [
+    "../ontology/wallet.dat"
+  ],
+  "To": [
+    "AZonXUcUgzWb2KYdSiLapgqCMEfWGCDTw5"
+  ],
+  "Amount": [
+    1000000000
+  ],
   "ToShard": 1,
   "ShardUrl": "http://localhost:20336"
 }

@@ -2,6 +2,7 @@ package shard
 
 import (
 	"encoding/json"
+	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/smartcontract/service/native/shardasset/oep4"
@@ -40,9 +41,9 @@ func TestAssetInit(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type XShardTransferParam struct {
-	Path     string
-	To       common.Address
-	Amount   uint64
+	Path     []string
+	To       []common.Address
+	Amount   []uint64
 	ToShard  common.ShardID
 	ShardUrl string
 	Contract string
@@ -61,22 +62,21 @@ func TestXShardTransferOep4(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("unmarshal shard init param: %s", err)
 		return false
 	}
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
+	users := make([]*sdk.Account, 0)
+	for _, path := range param.Path {
+		user, ok := getAccountByPassword(ctx, path)
+		if !ok {
+			ctx.LogError("get account failed")
+			return false
+		}
+		users = append(users, user)
 	}
 	contract, err := common.AddressFromHexString(param.Contract)
 	if err != nil {
 		ctx.LogError("decode contract addr failed, err: %s", err)
 		return false
 	}
-	//to, err := common.AddressFromBase58(param.To)
-	//if err != nil {
-	//	ctx.LogError("decode to addr failed, err: %s", err)
-	//	return false
-	//}
-	if err := XShardTransfer(ctx, user, contract, param.To, param.Amount, param.ToShard, param.ShardUrl,
+	if err := XShardTransfer(ctx, users, contract, param.To, param.Amount, param.ToShard, param.ShardUrl,
 		oep4.XSHARD_TRANSFER); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
@@ -98,17 +98,16 @@ func TestXShardTransferOng(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("unmarshal shard init param: %s", err)
 		return false
 	}
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
+	users := make([]*sdk.Account, 0)
+	for _, path := range param.Path {
+		user, ok := getAccountByPassword(ctx, path)
+		if !ok {
+			ctx.LogError("get account failed")
+			return false
+		}
+		users = append(users, user)
 	}
-	//to, err := common.AddressFromBase58(param.To)
-	//if err != nil {
-	//	ctx.LogError("decode to addr failed, err: %s", err)
-	//	return false
-	//}
-	if err := XShardTransfer(ctx, user, utils.ShardAssetAddress, param.To, param.Amount, param.ToShard, param.ShardUrl,
+	if err := XShardTransfer(ctx, users, utils.ShardAssetAddress, param.To, param.Amount, param.ToShard, param.ShardUrl,
 		oep4.ONG_XSHARD_TRANSFER); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
@@ -118,8 +117,8 @@ func TestXShardTransferOng(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type XShardTransferRetryParam struct {
-	Path       string
-	TransferId uint64
+	Path       []string
+	TransferId []uint64
 	ShardUrl   string
 	Contract   string
 }
@@ -137,12 +136,16 @@ func TestXShardTransferOngRetry(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("unmarshal shard init param: %s", err)
 		return false
 	}
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
+	users := make([]*sdk.Account, 0)
+	for _, path := range param.Path {
+		user, ok := getAccountByPassword(ctx, path)
+		if !ok {
+			ctx.LogError("get account failed")
+			return false
+		}
+		users = append(users, user)
 	}
-	if err := XShardTransferRetry(ctx, user, utils.ShardAssetAddress, param.TransferId, param.ShardUrl,
+	if err := XShardTransferRetry(ctx, users, utils.ShardAssetAddress, param.TransferId, param.ShardUrl,
 		oep4.ONG_XSHARD_TRANSFER_RETRY); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
@@ -164,17 +167,21 @@ func TestXShardTransferOep4Retry(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("unmarshal shard init param: %s", err)
 		return false
 	}
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
+	users := make([]*sdk.Account, 0)
+	for _, path := range param.Path {
+		user, ok := getAccountByPassword(ctx, path)
+		if !ok {
+			ctx.LogError("get account failed")
+			return false
+		}
+		users = append(users, user)
 	}
 	contract, err := common.AddressFromHexString(param.Contract)
 	if err != nil {
 		ctx.LogError("decode contract addr failed, err: %s", err)
 		return false
 	}
-	if err := XShardTransferRetry(ctx, user, contract, param.TransferId, param.ShardUrl, oep4.XSHARD_TRANFSER_RETRY);
+	if err := XShardTransferRetry(ctx, users, contract, param.TransferId, param.ShardUrl, oep4.XSHARD_TRANFSER_RETRY);
 		err != nil {
 		ctx.LogError("failed: %s", err)
 		return false

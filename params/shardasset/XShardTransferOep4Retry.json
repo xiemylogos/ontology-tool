@@ -1,6 +1,10 @@
 {
-  "Path": "../ontology/wallet.dat",
-  "TransferId": 1,
+  "Path": [
+    "../ontology/wallet.dat"
+  ],
+  "TransferId": [
+    1
+  ],
   "ShardUrl": "http://localhost:30336",
   "Contract": ""
 }
