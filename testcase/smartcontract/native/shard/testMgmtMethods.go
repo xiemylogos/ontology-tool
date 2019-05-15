@@ -1,10 +1,10 @@
 package shard
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/ontio/ontology/common"
+	"github.com/ontio/ontology/smartcontract/service/native/utils"
 	"io/ioutil"
 	"time"
 
@@ -336,8 +336,169 @@ func TestShardInfoQuery(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	buf := new(bytes.Buffer)
-	s.Serialize(buf)
-	fmt.Printf("shard: %v", string(buf.Bytes()))
+	sink := common.NewZeroCopySink(0)
+	s.Serialization(sink)
+	fmt.Printf("shard: %s", string(sink.Bytes()))
+	return true
+}
+
+type NotifyRootCommitDposParam struct {
+	Path     string
+	ShardUrl string
+}
+
+func TestNotifyRootCommitDpos(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shardmgmt/NotifyRootCommitDpos.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &NotifyRootCommitDposParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := NotifyRootCommitDpos(ctx, user, param.ShardUrl); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+
+	waitForBlock(ctx)
+	return true
+}
+
+type NotifyShardCommitDposParam struct {
+	Path    string
+	ShardId common.ShardID
+}
+
+func TestNotifyShardCommitDpos(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shardmgmt/NotifyShardCommitDpos.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &NotifyShardCommitDposParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := NotifyShardCommitDpos(ctx, user, param.ShardId); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+
+	waitForBlock(ctx)
+	return true
+}
+
+type ShardRetryCommitDposParam struct {
+	Path     string
+	ShardUrl string
+}
+
+func TestShardRetryCommitDpos(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shardmgmt/ShardRetryCommitDpos.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ShardRetryCommitDposParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := ShardRetryCommitDpos(ctx, user, param.ShardUrl); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+
+	waitForBlock(ctx)
+	return true
+}
+
+type GetShardCommitDposInfoParam struct {
+	ShardUrl string
+}
+
+func TestGetShardCommitDposInfo(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shardmgmt/GetShardCommitDposInfo.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &GetShardCommitDposInfoParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+	if err := GetShardCommitDposInfo(ctx, param.ShardUrl); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+
+	waitForBlock(ctx)
+	return true
+}
+
+type UpdateShardConfigParam struct {
+	Path    string
+	ShardId common.ShardID
+	*utils.Configuration
+}
+
+func TestUpdateShardConfig(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shardmgmt/UpdateShardConfig.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &UpdateShardConfigParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+
+	if err := UpdateShardConfig(ctx, user, param.ShardId, param.Configuration); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+	waitForBlock(ctx)
 	return true
 }

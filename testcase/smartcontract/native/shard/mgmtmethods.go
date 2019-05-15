@@ -3,7 +3,6 @@ package shard
 import (
 	"bytes"
 	"fmt"
-
 	"github.com/ontio/ontology-crypto/keypair"
 	sdk "github.com/ontio/ontology-go-sdk"
 	com "github.com/ontio/ontology-tool/testcase/smartcontract/native/common"
@@ -185,7 +184,7 @@ func ShardStateQuery(ctx *testframework.TestFrameworkContext, shardID common.Sha
 		return nil, fmt.Errorf("shardQeury, get global storage: %s", err)
 	}
 	gs := &shardstates.ShardMgmtGlobalState{}
-	if err := gs.Deserialize(bytes.NewBuffer(globalStateValue)); err != nil {
+	if err := gs.Deserialization(common.NewZeroCopySource(globalStateValue)); err != nil {
 		return nil, fmt.Errorf("failed to parse global state: %s", err)
 	}
 	fmt.Printf("global state: %v \n", gs)
@@ -198,9 +197,81 @@ func ShardStateQuery(ctx *testframework.TestFrameworkContext, shardID common.Sha
 	}
 
 	s := &shardstates.ShardState{}
-	if err := s.Deserialize(bytes.NewBuffer(value)); err != nil {
+	if err := s.Deserialization(common.NewZeroCopySource(value)); err != nil {
 		return nil, fmt.Errorf("shardQuery, deserialize shard state: %s", err)
 	}
 
 	return s, nil
+}
+
+func NotifyRootCommitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardUrl string) error {
+	contractAddress := utils.ShardMgmtContractAddress
+	method := shardmgmt.NOTIFY_ROOT_COMMIT_DPOS
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("txHash is: %s", txHash.ToHexString())
+	return nil
+}
+
+func NotifyShardCommitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardId common.ShardID) error {
+	contractAddress := utils.ShardMgmtContractAddress
+	method := shardmgmt.NOTIFY_SHARD_COMMIT_DPOS
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{shardId})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("txHash is: %s", txHash.ToHexString())
+	return nil
+}
+
+func ShardRetryCommitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardUrl string) error {
+	contractAddress := utils.ShardMgmtContractAddress
+	method := shardmgmt.SHARD_RETRY_COMMIT_DPOS
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("txHash is: %s", txHash.ToHexString())
+	return nil
+}
+
+func GetShardCommitDposInfo(ctx *testframework.TestFrameworkContext, shardUrl string) error {
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
+	method := shardmgmt.GET_SHARD_COMMIT_DPOS_INFO
+	contractAddress := utils.ShardMgmtContractAddress
+	value, err := ctx.Ont.Native.PreExecInvokeShardNativeContract(contractAddress, byte(0), method, 0,
+		[]interface{}{})
+	if err != nil {
+		return fmt.Errorf("pre-execute err: %s", err)
+	}
+	info, err := value.Result.ToString()
+	if err != nil {
+		return fmt.Errorf("parse result failed, err: %s", err)
+	}
+	ctx.LogInfo("pending transfer is: %s", info)
+	return nil
+}
+
+func UpdateShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID common.ShardID,
+	cfg *utils.Configuration) error {
+	contractAddress := utils.ShardMgmtContractAddress
+	method := shardmgmt.SHARD_RETRY_COMMIT_DPOS
+	param := &shardmgmt.UpdateConfigParam{
+		ShardId: shardID,
+		NewCfg:  cfg,
+	}
+	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
+		contractAddress, method, []interface{}{param})
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("txHash is: %s", txHash.ToHexString())
+	return nil
 }
