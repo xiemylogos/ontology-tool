@@ -204,12 +204,13 @@ func ShardStateQuery(ctx *testframework.TestFrameworkContext, shardID common.Sha
 	return s, nil
 }
 
-func NotifyRootCommitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardUrl string) error {
+func NotifyRootCommitDpos(ctx *testframework.TestFrameworkContext, shardId common.ShardID, user *sdk.Account,
+	shardUrl string) error {
 	contractAddress := utils.ShardMgmtContractAddress
 	method := shardmgmt.NOTIFY_ROOT_COMMIT_DPOS
 	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
-	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-		contractAddress, method, []interface{}{})
+	txHash, err := ctx.Ont.Native.InvokeShardNativeContract(shardId.ToUint64(), ctx.GetGasPrice(), ctx.GetGasLimit(),
+		user, 0, contractAddress, method, []interface{}{})
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}
@@ -229,12 +230,13 @@ func NotifyShardCommitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Ac
 	return nil
 }
 
-func ShardRetryCommitDpos(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardUrl string) error {
+func ShardRetryCommitDpos(ctx *testframework.TestFrameworkContext, shardId common.ShardID, user *sdk.Account,
+	shardUrl string) error {
 	contractAddress := utils.ShardMgmtContractAddress
 	method := shardmgmt.SHARD_RETRY_COMMIT_DPOS
 	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
-	txHash, err := ctx.Ont.Native.InvokeNativeContract(ctx.GetGasPrice(), ctx.GetGasLimit(), user, 0,
-		contractAddress, method, []interface{}{})
+	txHash, err := ctx.Ont.Native.InvokeShardNativeContract(shardId.ToUint64(), ctx.GetGasPrice(), ctx.GetGasLimit(),
+		user, 0, contractAddress, method, []interface{}{})
 	if err != nil {
 		return fmt.Errorf("invokeNativeContract error :", err)
 	}

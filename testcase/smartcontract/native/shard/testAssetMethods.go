@@ -41,12 +41,13 @@ func TestAssetInit(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type XShardTransferParam struct {
-	Path     []string
-	To       []common.Address
-	Amount   []uint64
-	ToShard  common.ShardID
-	ShardUrl string
-	Contract string
+	Path      []string
+	To        []common.Address
+	Amount    []uint64
+	FromShard common.ShardID
+	ToShard   common.ShardID
+	ShardUrl  string
+	Contract  string
 }
 
 func TestXShardTransferOep4(ctx *testframework.TestFrameworkContext) bool {
@@ -76,8 +77,8 @@ func TestXShardTransferOep4(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("decode contract addr failed, err: %s", err)
 		return false
 	}
-	if err := XShardTransfer(ctx, users, contract, param.To, param.Amount, param.ToShard, param.ShardUrl,
-		oep4.XSHARD_TRANSFER); err != nil {
+	if err := XShardTransfer(ctx, users, contract, param.To, param.Amount, param.FromShard, param.ToShard,
+		param.ShardUrl, oep4.XSHARD_TRANSFER); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}
@@ -107,8 +108,8 @@ func TestXShardTransferOng(ctx *testframework.TestFrameworkContext) bool {
 		}
 		users = append(users, user)
 	}
-	if err := XShardTransfer(ctx, users, utils.ShardAssetAddress, param.To, param.Amount, param.ToShard, param.ShardUrl,
-		oep4.ONG_XSHARD_TRANSFER); err != nil {
+	if err := XShardTransfer(ctx, users, utils.ShardAssetAddress, param.To, param.Amount, param.FromShard,
+		param.ToShard, param.ShardUrl, oep4.ONG_XSHARD_TRANSFER); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}
@@ -119,6 +120,7 @@ func TestXShardTransferOng(ctx *testframework.TestFrameworkContext) bool {
 type XShardTransferRetryParam struct {
 	Path       []string
 	TransferId []uint64
+	FromShard  common.ShardID
 	ShardUrl   string
 	Contract   string
 }
@@ -145,8 +147,8 @@ func TestXShardTransferOngRetry(ctx *testframework.TestFrameworkContext) bool {
 		}
 		users = append(users, user)
 	}
-	if err := XShardTransferRetry(ctx, users, utils.ShardAssetAddress, param.TransferId, param.ShardUrl,
-		oep4.ONG_XSHARD_TRANSFER_RETRY); err != nil {
+	if err := XShardTransferRetry(ctx, param.FromShard, users, utils.ShardAssetAddress, param.TransferId,
+		param.ShardUrl, oep4.ONG_XSHARD_TRANSFER_RETRY); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}
@@ -181,7 +183,8 @@ func TestXShardTransferOep4Retry(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("decode contract addr failed, err: %s", err)
 		return false
 	}
-	if err := XShardTransferRetry(ctx, users, contract, param.TransferId, param.ShardUrl, oep4.XSHARD_TRANFSER_RETRY);
+	if err := XShardTransferRetry(ctx, param.FromShard, users, contract, param.TransferId, param.ShardUrl,
+		oep4.XSHARD_TRANFSER_RETRY);
 		err != nil {
 		ctx.LogError("failed: %s", err)
 		return false

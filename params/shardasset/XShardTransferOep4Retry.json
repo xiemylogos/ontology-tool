@@ -5,6 +5,7 @@
   "TransferId": [
     1
   ],
+  "FromShard": 0,
   "ShardUrl": "http://localhost:30336",
   "Contract": ""
 }

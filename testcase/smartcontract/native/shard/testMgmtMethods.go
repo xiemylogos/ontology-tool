@@ -344,6 +344,7 @@ func TestShardInfoQuery(ctx *testframework.TestFrameworkContext) bool {
 
 type NotifyRootCommitDposParam struct {
 	Path     string
+	ShardId  common.ShardID
 	ShardUrl string
 }
 
@@ -367,7 +368,7 @@ func TestNotifyRootCommitDpos(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := NotifyRootCommitDpos(ctx, user, param.ShardUrl); err != nil {
+	if err := NotifyRootCommitDpos(ctx, param.ShardId, user, param.ShardUrl); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}
@@ -412,6 +413,7 @@ func TestNotifyShardCommitDpos(ctx *testframework.TestFrameworkContext) bool {
 
 type ShardRetryCommitDposParam struct {
 	Path     string
+	ShardId  common.ShardID
 	ShardUrl string
 }
 
@@ -435,7 +437,7 @@ func TestShardRetryCommitDpos(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := ShardRetryCommitDpos(ctx, user, param.ShardUrl); err != nil {
+	if err := ShardRetryCommitDpos(ctx, param.ShardId, user, param.ShardUrl); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}
