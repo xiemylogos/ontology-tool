@@ -12,3 +12,5 @@ config_test.json
 wallet.dat
 main.exe
 main
+peer_info.json
+user_info.json

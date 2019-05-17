@@ -194,7 +194,7 @@ func TestXShardTransferOep4Retry(ctx *testframework.TestFrameworkContext) bool {
 }
 
 type GetPendingTransferParam struct {
-	Path     string
+	User     common.Address
 	AssetId  uint64
 	ShardUrl string
 }
@@ -212,12 +212,7 @@ func TestGetPendingTransfer(ctx *testframework.TestFrameworkContext) bool {
 		ctx.LogError("unmarshal shard init param: %s", err)
 		return false
 	}
-	user, ok := getAccountByPassword(ctx, param.Path)
-	if !ok {
-		ctx.LogError("get account failed")
-		return false
-	}
-	if err := GetPendingTransfer(ctx, user, param.AssetId, param.ShardUrl); err != nil {
+	if err := GetPendingTransfer(ctx, param.User, param.AssetId, param.ShardUrl); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}

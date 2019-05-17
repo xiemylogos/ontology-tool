@@ -64,11 +64,11 @@ func XShardTransferRetry(ctx *testframework.TestFrameworkContext, fromShard comm
 	return nil
 }
 
-func GetPendingTransfer(ctx *testframework.TestFrameworkContext, user *sdk.Account, assetId uint64, shardUrl string) error {
+func GetPendingTransfer(ctx *testframework.TestFrameworkContext, addr common.Address, assetId uint64, shardUrl string) error {
 	method := oep4.GET_PENDING_TRANSFER
 	contractAddress := utils.ShardAssetAddress
 	param := &oep4.GetPendingXShardTransferParam{
-		Account: user.Address,
+		Account: addr,
 		Asset:   assetId,
 	}
 	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
