@@ -349,7 +349,7 @@ type NotifyRootCommitDposParam struct {
 }
 
 func TestNotifyRootCommitDpos(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/shardmgmt/NotifyRootCommitDpos.json"
+	configFile := "./params/shardmgmt/NotifyParentCommitDpos.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -368,7 +368,7 @@ func TestNotifyRootCommitDpos(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 
-	if err := NotifyRootCommitDpos(ctx, param.ShardId, user, param.ShardUrl); err != nil {
+	if err := NotifyParentCommitDpos(ctx, param.ShardId, user, param.ShardUrl); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}

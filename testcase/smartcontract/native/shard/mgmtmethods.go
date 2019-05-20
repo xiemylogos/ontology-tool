@@ -204,10 +204,10 @@ func ShardStateQuery(ctx *testframework.TestFrameworkContext, shardID common.Sha
 	return s, nil
 }
 
-func NotifyRootCommitDpos(ctx *testframework.TestFrameworkContext, shardId common.ShardID, user *sdk.Account,
+func NotifyParentCommitDpos(ctx *testframework.TestFrameworkContext, shardId common.ShardID, user *sdk.Account,
 	shardUrl string) error {
 	contractAddress := utils.ShardMgmtContractAddress
-	method := shardmgmt.NOTIFY_ROOT_COMMIT_DPOS
+	method := shardmgmt.NOTIFY_PARENT_COMMIT_DPOS
 	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
 	txHash, err := ctx.Ont.Native.InvokeShardNativeContract(shardId.ToUint64(), ctx.GetGasPrice(), ctx.GetGasLimit(),
 		user, 0, contractAddress, method, []interface{}{})
