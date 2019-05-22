@@ -2,10 +2,10 @@ OntCversion = '2.0.0'
 """
 An Example of OEP-4
 """
-from ontology.interop.Ontology.Shard import GetShardId
 from ontology.interop.Ontology.Contract import Migrate, InitMetaData
 from ontology.interop.Ontology.Native import Invoke
 from ontology.interop.Ontology.Runtime import Base58ToAddress
+from ontology.interop.Ontology.Shard import GetShardId
 from ontology.interop.System.Runtime import Notify, CheckWitness
 from ontology.interop.System.Storage import GetContext
 
@@ -45,7 +45,9 @@ def Main(operation, args):
     if operation == 'totalSupply':
         return totalSupply()
     if operation == 'shardSupply':
-        return shardSupply()
+        if len(args) != 1:
+            return False
+        return shardSupply(args[0])
     if operation == 'wholeSupply':
         return wholeSupply()
     if operation == 'supplyInfo':
@@ -176,11 +178,11 @@ def totalSupply():
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4TotalSupply', [])
 
 
-def shardSupply():
+def shardSupply(shardId):
     """
     :return: query shard supply at root
     """
-    return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4ShardSupply', [])
+    return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4ShardSupply', shardId)
 
 
 def wholeSupply():
