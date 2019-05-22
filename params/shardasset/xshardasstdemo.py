@@ -143,7 +143,7 @@ def init():
     shardId = 0
     res = InitMetaData(OWNER, allShard, frozen, shardId)
     assert (res)
-    param = state(NAME, SYMBOL, DECIMALS, TOTAL_AMOUNT * FACTOR, OWNER)
+    param = state(TOTAL_AMOUNT * FACTOR, OWNER)
     registerRes = Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4Register', param)
     assert (registerRes)
     shardId = GetShardId()

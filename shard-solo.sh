@@ -2,7 +2,7 @@ cd ../ontology/
 ./ontology asset transfer --from 1 --to 1 --amount 1 --gasprice 0
 ./ontology contract deploy --needstore --code ../ontology-tool/params/shardasset/xshardasstdemo.avm --name demo --version 1 --author test --email test@test.com --desc 'xshard asset test' --gasprice 0 --gaslimit 20000000
 sleep 10
-./ontology contract invoke --address 061d7b2cf105f284e9befe01fc67c71b3702cb80 --params string:init,[int:0] --gasprice 0
+./ontology contract invoke --address c53729d41eb1953b4d7ed66d421dd58462a8cf9d --params string:init,[int:0] --gasprice 0
 ./ontology asset withdrawong 1 --gasprice 0
 ./ontology asset transfer --from 1 --to AZqk4i7Zhfhc1CRUtZYKrLw4YTSq4Y9khN --amount 100000 --gasprice 0
 ./ontology asset transfer --from 1 --to ARpjnrnHEjXhg4aw7vY6xsY6CfQ1XEWzWC --amount 100000 --gasprice 0
