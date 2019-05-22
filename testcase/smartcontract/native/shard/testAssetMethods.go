@@ -78,7 +78,7 @@ func TestXShardTransferOep4(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	if err := XShardTransfer(ctx, users, contract, param.To, param.Amount, param.FromShard, param.ToShard,
-		param.ShardUrl, oep4.XSHARD_TRANSFER); err != nil {
+		param.ShardUrl, "xshardTransfer"); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}
@@ -157,7 +157,7 @@ func TestXShardTransferOngRetry(ctx *testframework.TestFrameworkContext) bool {
 }
 
 func TestXShardTransferOep4Retry(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/shardasset/XShardTransferOepRetry.json"
+	configFile := "./params/shardasset/XShardTransferOep4Retry.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)
@@ -184,7 +184,7 @@ func TestXShardTransferOep4Retry(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	if err := XShardTransferRetry(ctx, param.FromShard, users, contract, param.TransferId, param.ShardUrl,
-		oep4.XSHARD_TRANFSER_RETRY);
+		"xshardTransferRetry");
 		err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
@@ -265,6 +265,38 @@ func TestGetSupplyInfo(ctx *testframework.TestFrameworkContext) bool {
 		return false
 	}
 	if err := GetSupplyInfo(ctx, param.AssetId, param.ShardUrl); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+	return true
+}
+
+type GetOep4BalanceParam struct {
+	User     common.Address
+	ShardId  uint64
+	Contract string
+	ShardUrl string
+}
+
+func TestGetOep4Balance(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shardasset/GetOep4Balance.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &GetOep4BalanceParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal shard init param: %s", err)
+		return false
+	}
+	contract, err := common.AddressFromHexString(param.Contract)
+	if err != nil {
+		ctx.LogError("decode contract failed: %s", err)
+		return false
+	}
+	if err := GetOep4Balance(ctx, param.User, contract, param.ShardId, param.ShardUrl); err != nil {
 		ctx.LogError("failed: %s", err)
 		return false
 	}

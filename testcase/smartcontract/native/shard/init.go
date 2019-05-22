@@ -26,6 +26,7 @@ func TestShardMgmtContract() {
 	testframework.TFramework.RegTestCase("ShardGetPendingTransfer", TestGetPendingTransfer)
 	testframework.TFramework.RegTestCase("ShardGetTransferDetail", TestGetTransferDetail)
 	testframework.TFramework.RegTestCase("ShardGetSupplyInfo", TestGetSupplyInfo)
+	testframework.TFramework.RegTestCase("ShardGetOep4Balance", TestGetOep4Balance)
 
 	testframework.TFramework.RegTestCase("ShardChangePeerMaxAuth", TestShardChangePeerMaxAuthorization)
 	testframework.TFramework.RegTestCase("ShardChangePeerProportion", TestShardChangePeerProportion)

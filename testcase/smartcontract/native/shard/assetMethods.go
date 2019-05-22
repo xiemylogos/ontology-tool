@@ -5,6 +5,7 @@ import (
 	sdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-tool/testframework"
 	"github.com/ontio/ontology/common"
+	"github.com/ontio/ontology/smartcontract/service/native"
 	"github.com/ontio/ontology/smartcontract/service/native/shardasset/oep4"
 	"github.com/ontio/ontology/smartcontract/service/native/utils"
 	"math/big"
@@ -34,8 +35,16 @@ func XShardTransfer(ctx *testframework.TestFrameworkContext, users []*sdk.Accoun
 			ToShard: toShard,
 			Amount:  new(big.Int).SetUint64(num),
 		}
-		txHash, err := ctx.Ont.Native.InvokeShardNativeContract(fromShard.ToUint64(), ctx.GetGasPrice(),
-			ctx.GetGasLimit(), user, 0, contractAddress, method, []interface{}{param})
+		var txHash common.Uint256
+		var err error = nil
+		if _, ok := native.Contracts[contractAddress]; ok {
+			txHash, err = ctx.Ont.Native.InvokeShardNativeContract(fromShard.ToUint64(), ctx.GetGasPrice(),
+				ctx.GetGasLimit(), user, 0, contractAddress, method, []interface{}{param})
+		} else {
+			txHash, err = ctx.Ont.NeoVM.InvokeShardNeoVMContract(fromShard.ToUint64(), ctx.GetGasPrice(),
+				ctx.GetGasLimit(), user, contractAddress,
+				[]interface{}{method, []interface{}{user.Address, toAddr, toShard, num}})
+		}
 		if err != nil {
 			return fmt.Errorf("invokeNativeContract error :", err)
 		}
@@ -54,8 +63,15 @@ func XShardTransferRetry(ctx *testframework.TestFrameworkContext, fromShard comm
 			From:       user.Address,
 			TransferId: new(big.Int).SetUint64(id),
 		}
-		txHash, err := ctx.Ont.Native.InvokeShardNativeContract(fromShard.ToUint64(), ctx.GetGasPrice(),
-			ctx.GetGasLimit(), user, 0, contractAddress, method, []interface{}{param})
+		var txHash common.Uint256
+		var err error = nil
+		if _, ok := native.Contracts[contractAddress]; ok {
+			txHash, err = ctx.Ont.Native.InvokeShardNativeContract(fromShard.ToUint64(), ctx.GetGasPrice(),
+				ctx.GetGasLimit(), user, 0, contractAddress, method, []interface{}{param})
+		} else {
+			txHash, err = ctx.Ont.NeoVM.InvokeShardNeoVMContract(fromShard.ToUint64(), ctx.GetGasPrice(),
+				ctx.GetGasLimit(), user, contractAddress, []interface{}{method, []interface{}{user.Address, id}})
+		}
 		if err != nil {
 			return fmt.Errorf("invokeNativeContract error :", err)
 		}
@@ -109,7 +125,7 @@ func GetTransferDetail(ctx *testframework.TestFrameworkContext, user common.Addr
 }
 
 func GetSupplyInfo(ctx *testframework.TestFrameworkContext, assetId uint64, shardUrl string) error {
-	method := oep4.GET_TRANSFER
+	method := oep4.SUPPLY_INFO
 	contractAddress := utils.ShardAssetAddress
 	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
 	value, err := ctx.Ont.Native.PreExecInvokeShardNativeContract(contractAddress, byte(0), method, 0,
@@ -122,5 +138,21 @@ func GetSupplyInfo(ctx *testframework.TestFrameworkContext, assetId uint64, shar
 		return fmt.Errorf("parse result failed, err: %s", err)
 	}
 	ctx.LogInfo("supply info is: %s", info)
+	return nil
+}
+
+func GetOep4Balance(ctx *testframework.TestFrameworkContext, user, contract common.Address, shardId uint64,
+	shardUrl string) error {
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
+	value, err := ctx.Ont.NeoVM.PreExecInvokeShardNeoVMContract(shardId, contract,
+		[]interface{}{"balanceOf", []interface{}{user}})
+	if err != nil {
+		return fmt.Errorf("pre-execute err: %s", err)
+	}
+	info, err := value.Result.ToInteger()
+	if err != nil {
+		return fmt.Errorf("parse result failed, err: %s", err)
+	}
+	ctx.LogInfo("balance of %s is: %s", user.ToBase58(), info.String())
 	return nil
 }

@@ -10,6 +10,6 @@
   ],
   "FromShard": 0,
   "ToShard": 1,
-  "ShardUrl": "http://localhost:30336",
-  "Contract": ""
+  "ShardUrl": "http://localhost:20336",
+  "Contract": "dc719800a1b5277a5cbea687284f11b54a1dc9ae"
 }
