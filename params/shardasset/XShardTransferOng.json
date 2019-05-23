@@ -3,10 +3,10 @@
     "../ontology/wallet.dat"
   ],
   "To": [
-    "AZonXUcUgzWb2KYdSiLapgqCMEfWGCDTw5"
+    "AFmseVrdL9f9oyCzZefL9tG6UbviKTaSnK"
   ],
   "Amount": [
-    1000000000
+    100000000000
   ],
   "FromShard": 0,
   "ToShard": 1,

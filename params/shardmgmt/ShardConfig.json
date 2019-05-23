@@ -1,5 +1,5 @@
 {
-  "Path": "wallets/peer1/wallet.dat",
+  "Path": "../ontology/wallet.dat",
   "shard_id": 1,
   "network_size": 1,
   "vbft": {

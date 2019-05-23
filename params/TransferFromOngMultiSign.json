@@ -9,6 +9,7 @@
     "wallets/peer7/wallet.dat"
   ],
   "ToAddress": [
+    "AKuMYaCm7LeBHqNeKzvj7qQb3USakDr5yg",
     "AZqk4i7Zhfhc1CRUtZYKrLw4YTSq4Y9khN",
     "ARpjnrnHEjXhg4aw7vY6xsY6CfQ1XEWzWC",
     "AQs2BmzzFVk7pQPfTQQi9CTEz43ejSyBnt",
@@ -18,6 +19,7 @@
     "AK3YRcRvKrASQ6nTfW48Z4iMZ2sDTDRiMC"
   ],
   "Amount": [
+    10000000000000,
     10000000000000,
     10000000000000,
     10000000000000,

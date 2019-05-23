@@ -6,6 +6,7 @@
     "wallets/peer4/wallet.dat",
     "wallets/peer5/wallet.dat",
     "wallets/peer6/wallet.dat",
-    "wallets/peer7/wallet.dat"
+    "wallets/peer7/wallet.dat",
+    "../ontology/wallet.dat"
   ]
 }

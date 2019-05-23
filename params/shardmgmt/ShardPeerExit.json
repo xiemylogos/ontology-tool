@@ -1,5 +1,5 @@
 {
   "shard_id": 1,
-  "wallet": "wallets/peer3-owner/wallet.dat",
-  "peer": "0281d198c0dd3737a9c39191bc2d1af7d65a44261a8a64d6ef74d63f27cfb5ed92"
+  "wallet": "wallets/peer1/wallet.dat",
+  "peer": "0253ccfd439b29eca0fe90ca7c6eaa1f98572a054aa2d1d56e72ad96c466107a85"
 }

@@ -1,6 +1,6 @@
 {
   "Path": [
-    "wallets/peer1/wallet.dat"
+    "../ontology/wallet.dat"
   ],
   "shard_id": 1,
   "peer_pub_key": [
