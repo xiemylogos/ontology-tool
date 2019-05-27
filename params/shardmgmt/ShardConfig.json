@@ -7,7 +7,7 @@
     "c": 2,
     "k": 7,
     "l": 112,
-    "block_msg_delay": 10000,
+    "block_msg_delay": 5000,
     "hash_msg_delay": 10000,
     "peer_handshake_timeout": 10,
     "max_block_change_view": 5,

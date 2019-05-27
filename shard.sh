@@ -3,7 +3,7 @@
 cd ../ontology
 ./ontology contract deploy --needstore --code ../ontology-tool/params/shardasset/xshardasstdemo.avm --name demo --version 1 --author test --email test@test.com --desc 'xshard asset test' --gasprice 0 --gaslimit 20000000
 sleep 30
-./ontology contract invoke --address c53729d41eb1953b4d7ed66d421dd58462a8cf9d --params string:init,[int:0] --gasprice 0
+./ontology contract invoke --address 7397f8b28afa418fb6e17150e7df35c9b30e4935 --params string:init,[int:0] --gasprice 0
 cd ../ontology-tool
 ./main -t ShardInit
 ./main -t ShardCreate

@@ -1,6 +1,6 @@
 OntCversion = '2.0.0'
 """
-An Example of OEP-4
+An Example of OEP-9
 """
 from ontology.interop.Ontology.Contract import Migrate, InitMetaData
 from ontology.interop.Ontology.Native import Invoke
@@ -17,14 +17,13 @@ DECIMALS = 8
 FACTOR = 100000000
 OWNER = Base58ToAddress("AKuMYaCm7LeBHqNeKzvj7qQb3USakDr5yg")
 TOTAL_AMOUNT = 1000000000
-BALANCE_PREFIX = bytearray(b'\x01')
-APPROVE_PREFIX = b'\x02'
-SUPPLY_KEY = 'TotalSupply'
 
 # xshard asset contract Big endian Script Hash: 0x0900000000000000000000000000000000000000
 XSHARD_ASSET_ADDR = Base58ToAddress("AFmseVrdL9f9oyCzZefL9tG6UbviRj6Fv6")
 
 SHARD_VERSION = 1
+
+ONG_ASSET_ID = 0
 
 
 def Main(operation, args):
@@ -122,6 +121,14 @@ def Main(operation, args):
         if len(args) != 2:
             return False
         return xshardTransferOngRetry(args[0], args[1])
+    if operation == 'getOngXShardTransferDetail':
+        if len(args) != 2:
+            return False
+        return getOngXShardTransferDetail(args[0], args[1])
+    if operation == 'getOngPendingXShardTransfer':
+        if len(args) != 1:
+            return False
+        return getOngPendingXShardTransfer(args[0])
     if operation == "migrate":
         if len(args) != 7:
             return False
@@ -131,7 +138,7 @@ def Main(operation, args):
 
 def init():
     """
-    initialize the contract, call xshard asset contract register function
+    initialize the contract, init contract meta data, call xshard asset contract register function
     :return:
     """
 
@@ -173,35 +180,36 @@ def decimals():
 
 def totalSupply():
     """
-    :return: query total supply, if invoked at shard, there are no value
+    :return: return root shard total supply, if invoked at shard, there are no value
     """
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4TotalSupply', [])
 
 
 def shardSupply(shardId):
     """
-    :return: query shard supply at root
+    :return: return shard supply, only can be invoked at root shard
     """
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4ShardSupply', shardId)
 
 
 def wholeSupply():
     """
-    :return: sum supply at all shard, only can be invoked at root
+    :return: sum supply of all shard, only can be invoked at root
     """
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4WholeSupply', [])
 
 
 def supplyInfo():
     """
-    :return: query every shard supply at root
+    :return: query every shard supply at root, return each shard supply info, the info is map json string
     """
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4SupplyInfo', [])
 
 
 def balanceOf(account):
     """
-    :param account:
+    can be invoked at every shard. If invoked at non-root shard, the shard must receive a xshard transfer before. Otherwise the function will throw an exception.
+    :param account: user address
     :return: the token balance of account
     """
     if len(account) != 20:
@@ -211,7 +219,7 @@ def balanceOf(account):
 
 def assetId():
     """
-    each xshard asset own a unique asst id
+    each xshard asset own a unique asst id. If invoked at non-root shard, the shard must receive a xshard transfer before. Otherwise the function will throw an exception.
     :return: xshard asset id, big integer
     """
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4AssetId', [])
@@ -219,7 +227,7 @@ def assetId():
 
 def transfer(from_acct, to_acct, amount):
     """
-    Transfer amount of tokens from from_acct to to_acct
+    Transfer amount of tokens from from_acct to to_acct at same shard
     :param from_acct: the account from which the amount of tokens will be transferred
     :param to_acct: the account to which the amount of tokens will be transferred
     :param amount: the amount of the tokens to be transferred, >= 0
@@ -241,7 +249,7 @@ def transferMulti(args):
 
 def approve(owner, spender, amount):
     """
-    owner allow spender to spend amount of token from owner account
+    owner allow spender to spend amount of token from owner account at same shard
     Note here, the amount should be less than the balance of owner right now.
     :param owner:
     :param spender:
@@ -257,12 +265,12 @@ def approve(owner, spender, amount):
 def transferFrom(spender, from_acct, to_acct, amount):
     """
     spender spends amount of tokens on the behalf of from_acct, spender makes a transaction of amount of tokens
-    from from_acct to to_acct
+    from from_acct to to_acct at same shard
     :param spender:
     :param from_acct:
     :param to_acct:
     :param amount:
-    :return:
+    :return: True means success, False or raising exception means failure.
     """
     if len(spender) != 20 or len(from_acct) != 20 or len(to_acct) != 20:
         raise Exception("address length error")
@@ -277,24 +285,34 @@ def allowance(owner, spender):
     :param spender:  token spender
     :return: the allowed amount of tokens
     """
+    if len(owner) != 20 or len(spender) != 20:
+        raise Exception("address length error")
     param = state(owner, spender)
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4Allowance', param)
 
 
 def mint(user, amount):
     """
-    need check witness by myself
+    need check witness by myself, mint amount asset to user account
     :param user: 
     :param amount: 
-    :return: 
+    :return: True means success, False or raising exception means failure.
     """
     if CheckWitness(OWNER) == False:
-        return False
+        raise Exception("only owner can invoke")
+    if len(user) != 20:
+        raise Exception("address length error")
     param = state(user, amount)
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4Mint', param)
 
 
 def burn(user, amount):
+    """
+    burn asset from user account
+    :param user:
+    :param amount:
+    :return: True means success, False or raising exception means failure.
+    """
     param = state(user, amount)
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4Burn', param)
 
@@ -317,7 +335,7 @@ def xshardTransferRetry(from_acc, transferId):
     if cross shard transfer failed, invoke this method to retry
     :param from_acc: 
     :param transferId: xshard transfer id
-    :return: 
+    :return: True means success, False or raising exception means failure.
     """
     param = state(from_acc, transferId)
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4XShardTransferRetry', param)
@@ -338,10 +356,49 @@ def getPendignXShardTransfer(user):
     """
     get all pending transfer from user
     :param user: 
-    :return: 
+    :return: user all pending xshard transfer detail
     """
     param = state(user, assetId())
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'getOep4PendingTransfer', param)
+
+
+def migrate(code, needStorage, name, version, author, email, description):
+    """
+    migrate this contract
+    :param code:
+    :param needStorage:
+    :param name:
+    :param version:
+    :param author:
+    :param email:
+    :param description:
+    :return: True means success, False or raising exception means failure.
+    """
+    newAddr = AddressFromVmCode(code)
+    res = Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4Migrate', newAddr)
+    assert (res)
+    res = Migrate(code, needStorage, name, version, author, email, description)
+    assert (res)
+    Notify(["Migrate successfully"])
+    return True
+
+
+def AddressFromVmCode(code):
+    """
+    calculate the address of new contract code
+    :param code:
+    :return: the contract address of the code
+    """
+    Address = None
+    assert (len(code) > 0)
+    addr = hash160(code)
+
+    for i in reversed(range(0, 21)):
+        if i < 1:
+            break
+        Address = concat(Address, addr[i - 1:i])
+
+    return Address
 
 
 """
@@ -367,31 +424,28 @@ def xshardTransferOngRetry(from_acc, transferId):
     if cross shard transfer failed, invoke this method to retry
     :param from_acc: 
     :param transferId: xshard transfer id
-    :return: 
+    :return: True means success, False or raising exception means failure.
     """
     param = state(from_acc, transferId)
     return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'ongXShardTransferRetry', param)
 
 
-def migrate(code, needStorage, name, version, author, email, description):
-    newAddr = AddressFromVmCode(code)
-    res = Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4Migrate', newAddr)
-    assert (res)
-    res = Migrate(code, needStorage, name, version, author, email, description)
-    assert (res)
-    Notify(["Migrate successfully"])
-    return True
+def getOngXShardTransferDetail(user, transferId):
+    """
+    query user ong xshard transfer detail
+    :param user:
+    :param transferId:
+    :return: xshard transfer info
+    """
+    param = state(user, ONG_ASSET_ID, transferId)
+    return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'getOep4Transfer', param)
 
 
-def AddressFromVmCode(code):
-    from ontology.builtins import hash160
-    Address = None
-    assert (len(code) > 0)
-    addr = hash160(code)
-
-    for i in reversed(range(0, 21)):
-        if i < 1:
-            break
-        Address = concat(Address, addr[i - 1:i])
-
-    return Address
+def getOngPendingXShardTransfer(user):
+    """
+    get all pending ong transfer from user
+    :param user:
+    :return: user all pending ong xshard transfer detail
+    """
+    param = state(user, ONG_ASSET_ID)
+    return Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'getOep4PendingTransfer', param)

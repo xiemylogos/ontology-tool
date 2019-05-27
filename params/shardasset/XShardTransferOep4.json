@@ -3,7 +3,7 @@
     "../ontology/wallet.dat"
   ],
   "To": [
-    "AZqk4i7Zhfhc1CRUtZYKrLw4YTSq4Y9khN"
+    "AKuMYaCm7LeBHqNeKzvj7qQb3USakDr5yg"
   ],
   "Amount": [
     1000000000
@@ -11,5 +11,5 @@
   "FromShard": 0,
   "ToShard": 1,
   "ShardUrl": "http://localhost:20336",
-  "Contract": "c53729d41eb1953b4d7ed66d421dd58462a8cf9d"
+  "Contract": "7397f8b28afa418fb6e17150e7df35c9b30e4935"
 }
