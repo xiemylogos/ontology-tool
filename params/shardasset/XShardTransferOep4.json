@@ -8,8 +8,8 @@
   "Amount": [
     1000000000
   ],
-  "FromShard": 0,
-  "ToShard": 1,
-  "ShardUrl": "http://localhost:20336",
-  "Contract": "7397f8b28afa418fb6e17150e7df35c9b30e4935"
+  "FromShard": 1,
+  "ToShard": 0,
+  "ShardUrl": "http://localhost:30336",
+  "Contract": "18fb9366f1a9fa0a7cdd4d71661b4ac8c78ea762"
 }

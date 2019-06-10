@@ -8,6 +8,7 @@ from ontology.interop.Ontology.Runtime import Base58ToAddress
 from ontology.interop.Ontology.Shard import GetShardId
 from ontology.interop.System.Runtime import Notify, CheckWitness
 from ontology.interop.System.Storage import GetContext
+from ontology.interop.System.ExecutionEngine import GetExecutingScriptHash, GetCallingScriptHash, GetEntryScriptHash
 
 ctx = GetContext()
 
@@ -148,7 +149,8 @@ def init():
     allShard = True
     frozen = False
     shardId = 0
-    res = InitMetaData(OWNER, allShard, frozen, shardId)
+    ContractAddress = GetExecutingScriptHash()
+    res = InitMetaData(OWNER, allShard, frozen, shardId, [ContractAddress])
     assert (res)
     param = state(TOTAL_AMOUNT * FACTOR, OWNER)
     registerRes = Invoke(SHARD_VERSION, XSHARD_ASSET_ADDR, 'oep4Register', param)
