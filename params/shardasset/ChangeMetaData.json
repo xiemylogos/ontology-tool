@@ -1,0 +1,11 @@
+{
+  "Path": "../ontology/wallet.dat",
+  "ShardId": 0,
+  "ShardUrl": "http://localhost:20336",
+  "Contract": "18fb9366f1a9fa0a7cdd4d71661b4ac8c78ea762",
+  "Owner": "AKuMYaCm7LeBHqNeKzvj7qQb3USakDr5yg",
+  "Frozen": false,
+  "InvokedContracts": [
+    "18fb9366f1a9fa0a7cdd4d71661b4ac8c78ea762"
+  ]
+}

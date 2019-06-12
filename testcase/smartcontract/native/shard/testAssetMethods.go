@@ -302,3 +302,54 @@ func TestGetOep4Balance(ctx *testframework.TestFrameworkContext) bool {
 	}
 	return true
 }
+
+type ChangeMetaDataParam struct {
+	Path             string
+	ShardId          uint64
+	ShardUrl         string
+	Contract         string
+	Owner            common.Address
+	Frozen           bool
+	InvokedContracts []string
+}
+
+func TestChangeMetaData(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shardasset/ChangeMetaData.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &ChangeMetaDataParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal shard init param: %s", err)
+		return false
+	}
+	user, ok := getAccountByPassword(ctx, param.Path)
+	if !ok {
+		ctx.LogError("get account failed")
+		return false
+	}
+	contract, err := common.AddressFromHexString(param.Contract)
+	if err != nil {
+		ctx.LogError("decode contract failed: %s", err)
+		return false
+	}
+	invokedContracts := make([]common.Address, 0)
+	for _, addr := range param.InvokedContracts {
+		contract, err := common.AddressFromHexString(addr)
+		if err != nil {
+			ctx.LogError("decode contract failed: %s", err)
+			return false
+		}
+		invokedContracts = append(invokedContracts, contract)
+	}
+	if err := ChangeMetaData(ctx, user, contract, param.ShardId, param.ShardUrl, param.Owner, param.Frozen,
+		invokedContracts); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+	waitForBlock(ctx)
+	return true
+}

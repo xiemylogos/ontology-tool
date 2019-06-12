@@ -156,3 +156,15 @@ func GetOep4Balance(ctx *testframework.TestFrameworkContext, user, contract comm
 	ctx.LogInfo("balance of %s is: %s", user.ToBase58(), info.String())
 	return nil
 }
+
+func ChangeMetaData(ctx *testframework.TestFrameworkContext, user *sdk.Account, contract common.Address, shardId uint64,
+	shardUrl string, newOwner common.Address, frozen bool, invokedContracts []common.Address) error {
+	ctx.Ont.ClientMgr.GetRpcClient().SetAddress(shardUrl)
+	txHash, err := ctx.Ont.NeoVM.ChangeMetaData(shardId, ctx.GetGasPrice(), ctx.GetGasLimit(), user, contract,
+		newOwner, frozen, invokedContracts)
+	if err != nil {
+		return fmt.Errorf("invokeNativeContract error :", err)
+	}
+	ctx.LogInfo("txHash is: %s", txHash.ToHexString())
+	return nil
+}
