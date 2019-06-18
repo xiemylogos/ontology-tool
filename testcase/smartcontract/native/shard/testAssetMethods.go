@@ -314,7 +314,7 @@ type ChangeMetaDataParam struct {
 }
 
 func TestChangeMetaData(ctx *testframework.TestFrameworkContext) bool {
-	configFile := "./params/shardasset/ChangeMetaData.json"
+	configFile := "./params/shardcontract/ChangeMetaData.json"
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		ctx.LogError("read config from %s: %s", configFile, err)

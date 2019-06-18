@@ -257,7 +257,7 @@ func GetShardCommitDposInfo(ctx *testframework.TestFrameworkContext, shardUrl st
 	if err != nil {
 		return fmt.Errorf("parse result failed, err: %s", err)
 	}
-	ctx.LogInfo("pending transfer is: %s", info)
+	ctx.LogInfo("shard commit dpos info is: %s", info)
 	return nil
 }
 
