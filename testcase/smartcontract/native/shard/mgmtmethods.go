@@ -50,6 +50,22 @@ func ShardCreate(ctx *testframework.TestFrameworkContext, user *sdk.Account, par
 	return nil
 }
 
+func GetShardDetail(ctx *testframework.TestFrameworkContext, shardID common.ShardID) error {
+	method := shardmgmt.GET_SHARD_DETAIL
+	contractAddress := utils.ShardMgmtContractAddress
+	value, err := ctx.Ont.Native.PreExecInvokeShardNativeContract(contractAddress, byte(0), method, 0,
+		[]interface{}{shardID})
+	if err != nil {
+		return fmt.Errorf("pre-execute err: %s", err)
+	}
+	info, err := value.Result.ToString()
+	if err != nil {
+		return fmt.Errorf("parse result failed, err: %s", err)
+	}
+	ctx.LogInfo("shard commit dpos info is: %s", info)
+	return nil
+}
+
 func ShardConfig(ctx *testframework.TestFrameworkContext, user *sdk.Account, shardID common.ShardID, networkSize uint32,
 	vbft *config.VBFTConfig) error {
 	cfgBuff := new(bytes.Buffer)

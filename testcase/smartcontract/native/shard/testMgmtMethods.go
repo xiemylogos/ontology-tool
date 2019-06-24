@@ -84,6 +84,33 @@ func TestShardCreate(ctx *testframework.TestFrameworkContext) bool {
 	return true
 }
 
+type GetShardDetailParam struct {
+	ShardId common.ShardID
+}
+
+func TestGetShardDetail(ctx *testframework.TestFrameworkContext) bool {
+	configFile := "./params/shardmgmt/GetShardDetail.json"
+	data, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		ctx.LogError("read config from %s: %s", configFile, err)
+		return false
+	}
+
+	param := &GetShardDetailParam{}
+	if err := json.Unmarshal(data, param); err != nil {
+		ctx.LogError("unmarshal param: %s", err)
+		return false
+	}
+
+	if err := GetShardDetail(ctx, param.ShardId); err != nil {
+		ctx.LogError("failed: %s", err)
+		return false
+	}
+
+	waitForBlock(ctx)
+	return true
+}
+
 type ShardConfigParam struct {
 	Path        string             `json:"path"`
 	ShardID     common.ShardID     `json:"shard_id"`
@@ -448,7 +475,7 @@ func TestShardRetryCommitDpos(ctx *testframework.TestFrameworkContext) bool {
 
 type GetShardCommitDposInfoParam struct {
 	ShardUrl string
-	ShardId common.ShardID
+	ShardId  common.ShardID
 }
 
 func TestGetShardCommitDposInfo(ctx *testframework.TestFrameworkContext) bool {

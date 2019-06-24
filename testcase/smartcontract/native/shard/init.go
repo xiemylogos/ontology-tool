@@ -16,6 +16,7 @@ func TestShardMgmtContract() {
 	testframework.TFramework.RegTestCase("NotifyShardRootCommitDpos", TestNotifyShardCommitDpos)
 	testframework.TFramework.RegTestCase("ShardRetryCommitDpos", TestShardRetryCommitDpos)
 	testframework.TFramework.RegTestCase("GetShardCommitDposInfo", TestGetShardCommitDposInfo)
+	testframework.TFramework.RegTestCase("GetShardDetail", TestGetShardDetail)
 	testframework.TFramework.RegTestCase("UpdateShardConfig", TestUpdateShardConfig)
 
 	testframework.TFramework.RegTestCase("ShardAssetInit", TestAssetInit)
