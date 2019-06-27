@@ -6,14 +6,16 @@ from ontology.interop.Ontology.Contract import InitMetaData
 from ontology.interop.Ontology.Runtime import Base58ToAddress
 from ontology.interop.Ontology.Shard import GetShardId, NotifyRemoteShard, InvokeRemoteShard
 from ontology.interop.System.Runtime import Serialize, Deserialize
-from ontology.interop.System.Storage import GetContext
+from ontology.interop.System.Storage import GetContext, Put, Get
 from ontology.libont import hexstring2address
 
 ctx = GetContext()
 
-OWNER = Base58ToAddress("AKuMYaCm7LeBHqNeKzvj7qQb3USakDr5yg")
-X_SHARD_INVOKED_CONTRACT = hexstring2address("a95ee9e4c5ed9f927dda46c29af9f203195e40a1")
+OWNER = Base58ToAddress("AZ3BTJt7jNGwJjVLsYJAyfLtCJ38Cd8Uri")
+X_SHARD_INVOKED_CONTRACT = hexstring2address("88493a7ebae5e0431854f3f0b7e8f791f5e2d089")
 SHARD_VERSION = 1
+
+X_SHARD_INVOKE_KEY = "xshard_invoke"
 
 
 def Main(operation, args):
@@ -34,6 +36,8 @@ def Main(operation, args):
             return False
         xshardInvoke(args[0], args[1])
         return False
+    if operation == 'getXShardInvokeRes':
+        return getXShardInvokeRes()
     return False
 
 
@@ -63,5 +67,9 @@ def xshardInvoke(a, b):
     argsByteArray = Serialize(list)
     targetShardId = 2
     res = InvokeRemoteShard(targetShardId, X_SHARD_INVOKED_CONTRACT, "invokeCallee", argsByteArray)
-    assert (Deserialize(res))
+    Put(ctx, X_SHARD_INVOKE_KEY, Deserialize(res))
     return True
+
+
+def getXShardInvokeRes():
+    return Get(ctx, X_SHARD_INVOKE_KEY)

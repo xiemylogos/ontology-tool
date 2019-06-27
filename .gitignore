@@ -14,3 +14,9 @@ main.exe
 main
 peer_info.json
 user_info.json
+
+*.abi.json
+*.avm
+*.debug.json
+*.Func.Map
+*.warning

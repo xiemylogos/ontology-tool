@@ -101,14 +101,14 @@ type ShardCommitDposInfo struct {
 
 ## Shard Asset Contract
 
-用来管理跨分片资产。ontology tool存了一份编译好的跨分片oep4资产的[avm code](./params/shardasset/xshardasstdemo.avm)以及对应的[源码](./params/shardasset/xshardasstdemo.py)。可以部署到主链上去，然后调用init方法初始化，之后就可以正常使用了。
+用来管理跨分片资产。ontology tool存了一份编译好的跨分片oep4资产的[avm code](./params/shardasset/xshardasstdemo.avm.str)以及对应的[源码](./params/shardasset/xshardasstdemo.py)。可以部署到主链上去，然后调用init方法初始化，之后就可以正常使用了。
 
-使用ontology-cli可以很方便的实现合约部署与init的步骤，示例合约的地址是```18fb9366f1a9fa0a7cdd4d71661b4ac8c78ea762```，参考命令如下：
+使用ontology-cli可以很方便的实现合约部署与init的步骤，示例合约的地址是```a4b7710d5286352c4a23a51eef5e87d02c590617```，参考命令如下：
 
 ```
-./ontology contract deploy --needstore --code ../ontology-tool/params/shardasset/xshardasstdemo.avm --name demo --version 1 --author test --email test@test.com --desc 'xshard asset test' --gasprice 0 --gaslimit 20000000
+./ontology contract deploy --needstore --code ../ontology-tool/params/shardasset/xshardasstdemo.avm.str --name demo --version 1 --author test --email test@test.com --desc 'xshard asset test' --gasprice 0 --gaslimit 20000000
 sleep 10 # wait block generate
-./ontology contract invoke --address 18fb9366f1a9fa0a7cdd4d71661b4ac8c78ea762 --params string:init,[int:0] --gasprice 0
+./ontology contract invoke --address a4b7710d5286352c4a23a51eef5e87d02c590617 --params string:init,[int:0] --gasprice 0
 ```
 
 ### ShardAssetInit

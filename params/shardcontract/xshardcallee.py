@@ -11,7 +11,7 @@ from ontology.libont import str
 
 ctx = GetContext()
 
-OWNER = Base58ToAddress("AKuMYaCm7LeBHqNeKzvj7qQb3USakDr5yg")
+OWNER = Base58ToAddress("AZ3BTJt7jNGwJjVLsYJAyfLtCJ38Cd8Uri")
 X_SHARD_NOTIFY_KEY = "xshardNotify"
 X_SHARD_INVOKE_KEY = "xshardInvoke"
 
@@ -78,8 +78,8 @@ def invokeCallee(argsByteArray):
     a = args[0]
     b = args[1]
     Notify([a, b, invokeCount])
-    res = Serialize(True)
-    return res
+    res = a + b
+    return Serialize(res)
 
 
 def getXShardCount():
